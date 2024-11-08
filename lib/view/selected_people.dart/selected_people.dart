@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:prototype/resources/constants/colors.dart';
 import 'package:prototype/resources/constants/endpoints.dart';
+import 'package:prototype/view/selected_people.dart/selectedPerson.dart';
+import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 
 class SelectedPersonView extends StatefulWidget {
   final String role;
@@ -99,11 +102,18 @@ class _SelectedPersonViewState extends State<SelectedPersonView> {
     final displayName = user['name'] ?? 'Unknown';
     final rating = user['rating'] ?? 'No Rating';
     final profileImage = user['profileImage'] ?? '';
+    final userId = user['_id'] ?? 'No id';
 
     return GestureDetector(
       onTap: () {
         // Handle call button press here
         print("Calling $displayName");
+        print("Calling $userId");
+
+// AllLocalData().remoteuserid();
+        Get.to(ConnectingTheUser(
+          userId: userId,
+        ));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -166,14 +176,14 @@ class _SelectedPersonViewState extends State<SelectedPersonView> {
                     Container(
                       height: size.height * 0.05,
                       width: size.width * 0.45,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: AppColors.emeraldGreenLight,
                         borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(15),
                           bottomRight: Radius.circular(15),
                         ),
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

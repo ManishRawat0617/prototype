@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:prototype/resources/constants/colors.dart';
-import 'package:prototype/view/auth/profile/profilegarbage.dart';
+import 'package:prototype/view/auth/profile/profileView.dart';
 import 'package:prototype/view/home/homeView.dart';
 import 'package:prototype/view/search/searchView.dart';
 import 'package:prototype/view/setting/settingView.dart';
@@ -34,8 +34,7 @@ class _BottomNBState extends State<BottomNB> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: pages[_selectedIndex]
-      ,
+      body: pages[_selectedIndex],
       bottomNavigationBar: Container(
         height: size.height * 0.1,
         width: size.width,
@@ -47,7 +46,7 @@ class _BottomNBState extends State<BottomNB> {
           children: [
             _buildNavIcon(0, Icons.home, "Home"),
             _buildNavIcon(1, Icons.search, "Search"),
-            _buildNavIcon(2, Icons.developer_board, "Board"), // Placeholder
+            _buildNavIcon(2, Icons.person, "Profile"), // Placeholder
             _buildNavIcon(3, Icons.settings, "Settings"), // Placeholder
           ],
         ),
@@ -64,7 +63,7 @@ class _BottomNBState extends State<BottomNB> {
         children: [
           Icon(
             iconData,
-            size: 30,
+            size: 26,
             color: index == _selectedIndex
                 ? AppColors.lightGray
                 : AppColors.darkGray,
@@ -75,6 +74,8 @@ class _BottomNBState extends State<BottomNB> {
               color: index == _selectedIndex
                   ? AppColors.lightGray
                   : AppColors.darkGray,
+              fontWeight:
+                  index == _selectedIndex ? FontWeight.bold : FontWeight.normal,
               fontSize: 12,
             ),
           ),

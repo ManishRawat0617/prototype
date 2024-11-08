@@ -6,7 +6,7 @@ import 'package:prototype/view/auth/common/button.dart';
 import 'package:prototype/view/auth/common/inputBox.dart';
 import 'package:prototype/view/auth/common/signinwith.dart';
 import 'package:prototype/view/auth/signup/signupView.dart';
-import 'package:prototype/view_model/auth/loignUser.dart';
+import 'package:prototype/view_model/auth/loginUser.dart';
 import 'package:prototype/view_model/auth/loginController.dart';
 
 class LoginView extends StatefulWidget {
@@ -56,6 +56,8 @@ class _LoginViewState extends State<LoginView> {
                   GetData().loginUser(
                       loginController.emailController.text.toString(),
                       loginController.passwordController.text.toString());
+                  // print(loginController.emailController.text.toString());
+                  // print(loginController.emailController.text.toString());
                 },
                 size: size,
                 title: "Login",

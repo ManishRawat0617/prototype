@@ -6,9 +6,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:prototype/resources/constants/endpoints.dart';
 import 'package:prototype/resources/constants/userInfo.dart';
 import 'package:prototype/view/auth/login/loginView.dart';
-import 'package:prototype/view_model/auth/loignUser.dart';
+import 'package:prototype/view_model/auth/loginUser.dart';
 import 'package:http/http.dart' as http;
 import 'package:prototype/view_model/auth/post.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GooglesigninAPi {
   static final _googleSignIn = GoogleSignIn();
@@ -24,7 +25,8 @@ class LoginController extends GetxController {
 
   Future signInWithGoogle() async {
     final user = await GooglesigninAPi.login();
-
+    
+  
     try {
       http.Response response =
           await http.post(Uri.parse(EndPoints.registerUser),

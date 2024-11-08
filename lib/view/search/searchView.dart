@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:prototype/resources/constants/endpoints.dart';
 import 'package:prototype/view/home/bottomNav/bottomNav.dart';
+import 'package:prototype/view/selected_people.dart/selected_people.dart';
 
 // Role model to store title and description
 class Role {
@@ -126,6 +127,9 @@ class _SearchViewState extends State<SearchView> {
                         child: ListTile(
                           onTap: () {
                             print(index.toString());
+                            print(filteredRoles[index].title.toString());
+                            Get.to(SelectedPersonView(
+                                role: filteredRoles[index].title));
                           },
                           shape: RoundedRectangleBorder(
                             side: BorderSide(width: 1),

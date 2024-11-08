@@ -1,32 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:prototype/view/setting/settingView.dart';
+import 'package:prototype/resources/constants/colors.dart';
+import 'package:prototype/view_model/auth/loginUser.dart';
+import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 
 class ProfileView extends StatelessWidget {
-  String? userName;
-  String? role;
-  String? email;
-
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+    String? userName = AllLocalData().username;
+    String? email = AllLocalData().email;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Profile",
-          style: TextStyle(
-              color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
-        ),
+        title: Text("Profile"),
         backgroundColor: Colors.green,
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: Icon(
-              Icons.settings,
-              color: Colors.white,
-            ),
+            icon: Icon(Icons.settings),
             onPressed: () {
               // Navigate to settings
-              print("Pressing the button of setting");
-              Get.to(SettingsView());
             },
           ),
         ],
@@ -38,29 +31,27 @@ class ProfileView extends StatelessWidget {
             Container(
               width: 200,
               padding: EdgeInsets.symmetric(vertical: 20),
-              decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10))),
+              color: Colors.green,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: NetworkImage(
-                        "https://imgs.search.brave.com/mERlHXZYBUH4yP5IxaVUb5RlnqDqkU0i0IlQxI-5NmE/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy90/aHVtYi9jL2NiL1Ro/ZV9QcmltZV9NaW5p/c3RlciUyQ19TaHJp/X05hcmVuZHJhX01v/ZGlfbWVldGluZ19N/ci5fRWxvbl9NdXNr/X2luX05ld19Zb3Jr/JTJDX1VTQV9vbl9K/dW5lXzIwJTJDXzIw/MjNfJTI4MiUyOV8l/Mjhjcm9wcGVkJTI5/XyUyOGIlMjkuanBn/LzUxMnB4LVRoZV9Q/cmltZV9NaW5pc3Rl/ciUyQ19TaHJpX05h/cmVuZHJhX01vZGlf/bWVldGluZ19Nci5f/RWxvbl9NdXNrX2lu/X05ld19Zb3JrJTJD/X1VTQV9vbl9KdW5l/XzIwJTJDXzIwMjNf/JTI4MiUyOV8lMjhj/cm9wcGVkJTI5XyUy/OGIlMjkuanBn"),
+                    child: Icon(
+                      Icons.person,
+                      size: size.height * 0.1,
+                    ),
                   ),
                   SizedBox(height: 10),
                   Text(
-                    "Elon Musk",
+                    userName.toString(),
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Lover of adventure",
+                    email.toString(),
                     style: TextStyle(color: Colors.white70),
                   ),
                 ],
@@ -68,18 +59,19 @@ class ProfileView extends StatelessWidget {
             ),
             // Stats Section
             Padding(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(14),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildStatItem("Helped", "100"),
-                  _buildStatItem("Calls", "180"),
+                  _buildStatItem("Followers", "120"),
+                  _buildStatItem("Following", "80"),
                   _buildStatItem("Posts", "35"),
                 ],
               ),
             ),
             // Activity Section
             ListTile(
+              minTileHeight: size.height * 0.065,
               leading: Icon(Icons.history),
               title: Text("Recent Activities"),
               trailing: Icon(Icons.arrow_forward),
@@ -90,6 +82,7 @@ class ProfileView extends StatelessWidget {
             Divider(),
             // Personal Info
             ListTile(
+              minTileHeight: size.height * 0.065,
               leading: Icon(Icons.person),
               title: Text("Personal Information"),
               trailing: Icon(Icons.edit),
@@ -100,6 +93,7 @@ class ProfileView extends StatelessWidget {
             Divider(),
             // Preferences
             ListTile(
+              minTileHeight: size.height * 0.065,
               leading: Icon(Icons.favorite),
               title: Text("Interests & Preferences"),
               trailing: Icon(Icons.arrow_forward),
@@ -107,6 +101,16 @@ class ProfileView extends StatelessWidget {
                 // Navigate to preferences
               },
             ),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.emeraldGreen),
+                onPressed: () {
+                  GetData().logoutUser();
+                },
+                child: Text(
+                  "Log Out",
+                  style: TextStyle(color: Colors.white),
+                ))
           ],
         ),
       ),

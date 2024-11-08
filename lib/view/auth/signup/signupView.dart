@@ -8,7 +8,7 @@ import 'package:prototype/view/auth/login/loginView.dart';
 
 import 'package:prototype/view/auth/signup/widgets/roleTextField.dart';
 import 'package:prototype/view/home/bottomNav/bottomNav.dart';
-import 'package:prototype/view/home/homeView.dart';
+import 'package:prototype/view/search/searchView.dart';
 import 'package:prototype/view_model/auth/post.dart';
 import 'package:prototype/view_model/auth/signupController.dart';
 
@@ -20,7 +20,33 @@ class SignupView extends StatefulWidget {
 }
 
 class _SignupViewState extends State<SignupView> {
-  List<String> role = [];
+  final GetRole getRole = GetRole();
+  List<Role> roles = [];
+  Role? selectedRole;
+  bool isLoading = true;
+  String errorMessage = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchRoles();
+  }
+
+  Future<void> fetchRoles() async {
+    try {
+      final fetchedRoles = await getRole.allRole();
+      setState(() {
+        roles = fetchedRoles;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        errorMessage = e.toString();
+        isLoading = false;
+      });
+    }
+  }
+
   final double gap = 0.03;
 
   final signupController = Get.put(SignUpController());
@@ -77,12 +103,44 @@ class _SignupViewState extends State<SignupView> {
                 height: size.height * gap,
               ),
               // Choosing /Adding role textfield
+              Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Center(
+                  child: isLoading
+                      ? const CircularProgressIndicator()
+                      : errorMessage.isNotEmpty
+                          ? Text(
+                              errorMessage,
+                              style: const TextStyle(color: Colors.red),
+                            )
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                DropdownButton<Role>(
+                                  hint: const Text("Select a Role"),
+                                  value: selectedRole,
+                                  isExpanded: true,
+                                  items: roles.map((Role role) {
+                                    return DropdownMenuItem<Role>(
+                                      value: role,
+                                      child: Text(role.title),
+                                    );
+                                  }).toList(),
+                                  onChanged: (Role? newValue) {
+                                    setState(() {
+                                      selectedRole = newValue;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                ),
+              ),
               AddButton(
                 controller: signupController.roleController,
                 size: size,
                 ontap: () {
-                  signupController.addRole(
-                      signupController.roleController.value.text.toString());
+                  signupController.addRole(selectedRole!.title.toString());
                   signupController.roleController.clear();
                 },
               ),
