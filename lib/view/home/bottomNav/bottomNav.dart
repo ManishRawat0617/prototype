@@ -237,6 +237,7 @@ class _BottomNBState extends State<BottomNB> {
       selfCallerID: AllLocalData().userid!,
     );
     _listenForIncomingCall();
+    _listenForIncomingCallFromProfessials();
     // Listen for incoming call events
     socket?.on("newCall", (data) {
       if (mounted) {
@@ -258,11 +259,25 @@ class _BottomNBState extends State<BottomNB> {
     });
   }
 
+  void _listenForIncomingCallFromProfessials() {
+    socket?.on("incomingCallfromProfessial", (data) {
+      setState(() {
+        callerId = data['callerId'];
+        message = data['message'];
+      });
+
+      // Show the dialog when an incoming call is detected
+
+      _showIncomingCallDialogFromProfessials();
+    });
+  }
+
   @override
   void dispose() {
     // Remove socket listeners
     // socket?.off("newCall");
     socket?.off("incomingCall");
+    socket?.off("incomingCallfromProfessial");
     socket?.off("newCall");
     super.dispose();
   }
@@ -422,6 +437,50 @@ class _BottomNBState extends State<BottomNB> {
         ),
       ),
     );
+  }
+
+  void _showIncomingCallDialogFromProfessials() {
+    if (_isDialogOpen) return; // Prevent multiple dialogs
+    _isDialogOpen = true; // Set dialog state to open
+
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dismissing by tapping outside
+      builder: (_) => AlertDialog(
+        title: const Text("Incoming Call from the professional"),
+        content: Text("$callerId is calling you. Message: $message"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              _dismissDialog(); // Close the dialog
+              if (callerId != null) {
+                // Implement your logic for rejecting the call
+                // debugPrint("Call rejected from $callerId");
+                socket?.emit("rejectCallOfProfessional", {
+                  "callerId": callerId,
+                });
+              }
+            },
+            child: const Text("Reject", style: TextStyle(color: Colors.red)),
+          ),
+          TextButton(
+            onPressed: () {
+              _dismissDialog(); // Close the dialog
+              socket?.emit("acceptCallOfProfessional", {"callerId": callerId});
+            },
+            child: const Text("Accept", style: TextStyle(color: Colors.green)),
+          ),
+        ],
+      ),
+    );
+
+    // Automatically close the dialog after 5 seconds if no action is taken
+    Future.delayed(const Duration(seconds: 5), () {
+      if (_isDialogOpen) {
+        _dismissDialog(); // Close the dialog
+        _rejectCall(); // Handle rejection logic after timeout
+      }
+    });
   }
 
   @override

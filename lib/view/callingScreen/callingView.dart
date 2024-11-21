@@ -322,11 +322,6 @@ class _CallViewState extends State<CallView> {
     if (mounted) super.setState(fn);
   }
 
-  // void _makeCall(String calleeId) {
-  //   socket?.emit(
-  //       "callUser", {"callerId": AllLocalData().userid!, "calleeId": widget.calleeId});
-  // }
-
   void _listenForResponse() {
     socket?.on("accept", (data) {
       var calleeId = data["calleeId"];
@@ -342,8 +337,8 @@ class _CallViewState extends State<CallView> {
   }
 
   void _makecall(String calleeId) {
-    socket?.emit(
-        "callUser", {"callerId": widget.callerId, "calleeId": calleeId});
+    socket
+        ?.emit("callUser", {"callerId": widget.callerId, "calleeId": calleeId});
   }
 
   Future<void> _setupPeerConnection() async {
@@ -454,7 +449,6 @@ class _CallViewState extends State<CallView> {
 
   void _leaveCall() {
     Navigator.pop(context);
-    
   }
 
   void _toggleMic() {

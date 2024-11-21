@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:prototype/resources/constants/colors.dart';
 import 'package:prototype/resources/constants/endpoints.dart';
 import 'package:prototype/view/callingScreen/callingView.dart';
 import 'package:prototype/view/home/selecting%20Professials/makecalltoPeople.dart';
+import 'package:prototype/view/home/selecting%20Professials/showcallee.dart';
 
 class SelectedProfessionals extends StatefulWidget {
   final String role;
@@ -102,10 +104,29 @@ class _SelectedProfessionalsState extends State<SelectedProfessionals> {
         appBar: AppBar(
           title: const Text("Selected Topic"),
         ),
-        body: ElevatedButton(
-            onPressed: () {
-              MakeCallToPeople().CallThePeople(users);
-            },
-            child: Text("Call")));
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                height: size.width * 0.2,
+                width: size.width * 0.4,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.emeraldGreenLight),
+                    onPressed: () {
+                      Get.to(ShowCalleeView(list: users));
+
+                      // MakeCallToPeople().CallThePeople(users);
+                    },
+                    child: Text(
+                      "Call",
+                      style: TextStyle(fontSize: 30),
+                    )),
+              ),
+            ],
+          ),
+        ));
   }
 }

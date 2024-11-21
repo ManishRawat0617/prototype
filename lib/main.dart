@@ -8,7 +8,7 @@ import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AllLocalData().init();
-  print("User Id : ");
+  print("User Id : "); 
   print(AllLocalData().userid);
   // Initialize signalling service with websocket URL and caller ID
 

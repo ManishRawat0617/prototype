@@ -1,18 +1,20 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:prototype/resources/constants/colors.dart';
 import 'package:prototype/resources/constants/endpoints.dart';
 import 'package:prototype/view/callingScreen/callingView.dart';
 import 'package:prototype/view/home/selecting%20Professials/makecalltoPeople.dart';
+import 'package:prototype/view/home/selecting%20Professials/showcallee.dart';
 
 class connectingPeople extends StatefulWidget {
-  final String ?role;
+  final String? role;
   final String selfCallerId;
 
   const connectingPeople({
     Key? key,
-     this.role,
+    this.role,
     required this.selfCallerId,
   }) : super(key: key);
 
@@ -101,8 +103,15 @@ class _connectingPeopleState extends State<connectingPeople> {
 
     return Scaffold(
         body: Center(
-            child: ElevatedButton(onPressed: () {
-              MakeCallToPeople().CallThePeople(users);
-            }, child: Text("CAll"))));
+            child: Column(
+      children: [
+        ElevatedButton(
+            onPressed: () {
+              // MakeCallToPeople().CallThePeople(users);
+              Get.to(ShowCalleeView(list: users));
+            },
+            child: Text("CAll")),
+      ],
+    )));
   }
 }
