@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:prototype/resources/constants/endpoints.dart';
 import 'package:prototype/resources/constants/keys.dart';
-import 'package:prototype/test.dart';
 import 'package:prototype/view/auth/login/loginView.dart';
+import 'package:prototype/view/callingScreen/signalingServer.dart';
 import 'package:prototype/view/home/bottomNav/bottomNav.dart';
 import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,6 +34,12 @@ class GetData {
         await AllLocalData().setEmail(data['email']);
         await AllLocalData().setUsername(data['userName']);
         await AllLocalData().setUserId(data['id']);
+        if (data['id'] != null && data['id'].isNotEmpty) {
+          SignallingService.instance.init(
+            websocketUrl: EndPoints.websocketUrl,
+            selfCallerID: data['id'],
+          );
+        }
 
         // Navigate to HomeView with Get.off
         print('Response body: ${response.body.toString()}');

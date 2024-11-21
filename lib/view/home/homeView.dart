@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:prototype/resources/constants/endpoints.dart';
 import 'package:prototype/resources/constants/keys.dart';
 import 'package:prototype/view/blog/blogView.dart';
 import 'package:prototype/view/auth/profile/profileView.dart';
 import 'package:prototype/view/callingScreen/signalingServer.dart';
+import 'package:prototype/view/home/selecting%20Professials/searchProfessional.dart';
 import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,10 +24,10 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
     checkSharedPreferences();
     //  Initialize signalling service with websocket URL and caller ID
-    const websocketUrl = "http://192.168.1.33:5000";
+
     // const websocketUrl = "https://webrtc-rwl3.onrender.com/";
     SignallingService.instance.init(
-      websocketUrl: websocketUrl,
+      websocketUrl: EndPoints.websocketUrl,
       selfCallerID: AllLocalData().userid!,
     );
   }
@@ -86,7 +88,7 @@ class _HomeViewState extends State<HomeView> {
             children: [
               _buildQuickActionButton(Icons.person, "Search for Professionals",
                   () {
-                Get.to(ProfileView());
+                Get.to(SearcProfessionals());
               }),
               _buildQuickActionButton(Icons.developer_board, "Posts", () {
                 Get.to(BlogView());

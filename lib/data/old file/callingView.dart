@@ -281,13 +281,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:prototype/view/callingScreen/signalingServer.dart';
-import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 
-class CallView extends StatefulWidget {
+class CallScreen extends StatefulWidget {
   final String callerId, calleeId;
   final dynamic offer;
 
-  const CallView({
+  const CallScreen({
     super.key,
     this.offer,
     required this.callerId,
@@ -296,10 +295,10 @@ class CallView extends StatefulWidget {
   });
 
   @override
-  State<CallView> createState() => _CallViewState();
+  State<CallScreen> createState() => _CallScreenState();
 }
 
-class _CallViewState extends State<CallView> {
+class _CallScreenState extends State<CallScreen> {
   final socket = SignallingService.instance.socket;
   final _localRTCVideoRenderer = RTCVideoRenderer();
   final _remoteRTCVideoRenderer = RTCVideoRenderer();
@@ -311,10 +310,9 @@ class _CallViewState extends State<CallView> {
   @override
   void initState() {
     super.initState();
-    _makecall(widget.calleeId);
     _localRTCVideoRenderer.initialize();
     _remoteRTCVideoRenderer.initialize();
-    _listenForResponse();
+    _setupPeerConnection();
   }
 
   @override
@@ -322,29 +320,6 @@ class _CallViewState extends State<CallView> {
     if (mounted) super.setState(fn);
   }
 
-  // void _makeCall(String calleeId) {
-  //   socket?.emit(
-  //       "callUser", {"callerId": AllLocalData().userid!, "calleeId": widget.calleeId});
-  // }
-
-  void _listenForResponse() {
-    socket?.on("accept", (data) {
-      var calleeId = data["calleeId"];
-      var response = data['reply'];
-
-      // setState(() {
-      //   callStatus = response;
-      // });
-    });
-    // it will make the call only if the reply is accept
-
-    _setupPeerConnection();
-  }
-
-  void _makecall(String calleeId) {
-    socket?.emit(
-        "callUser", {"callerId": widget.callerId, "calleeId": calleeId});
-  }
 
   Future<void> _setupPeerConnection() async {
     try {
@@ -454,7 +429,6 @@ class _CallViewState extends State<CallView> {
 
   void _leaveCall() {
     Navigator.pop(context);
-    
   }
 
   void _toggleMic() {

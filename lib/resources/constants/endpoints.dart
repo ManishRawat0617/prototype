@@ -4,5 +4,6 @@ class EndPoints {
   static const String loginUser = baseURl + "user/auth/login";
   static const String roles = baseURl + "role";
   static const String filterRoles = baseURl + "role/api/roles/role";
-  // static const String webrtc = "https://webrtc-rwl3.onrender.com/";
+  static const String websocketUrl = "http://192.168.1.33:4004";
+  // static const String websocketUrl = "https://webrtc-tgwt.onrender.com";
 }

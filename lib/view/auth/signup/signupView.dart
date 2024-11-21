@@ -11,6 +11,7 @@ import 'package:prototype/view/home/bottomNav/bottomNav.dart';
 import 'package:prototype/view/search/searchView.dart';
 import 'package:prototype/view_model/auth/post.dart';
 import 'package:prototype/view_model/auth/signupController.dart';
+import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 
 class SignupView extends StatefulWidget {
   const SignupView({super.key});

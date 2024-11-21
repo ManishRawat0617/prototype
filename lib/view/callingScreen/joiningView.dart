@@ -153,6 +153,7 @@
 import 'package:flutter/material.dart';
 import 'package:prototype/view/callingScreen/callingView.dart';
 import 'package:prototype/view/callingScreen/signalingServer.dart';
+import 'package:prototype/view/callingScreen/widget/IncomingCallAlert.dart';
 
 class JoinScreen extends StatefulWidget {
   final String selfCallerId;
@@ -205,7 +206,7 @@ class _JoinScreenState extends State<JoinScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => CallScreen(
+        builder: (_) => CallView(
           callerId: callerId,
           calleeId: calleeId,
           offer: offer,
@@ -300,43 +301,6 @@ class _JoinScreenState extends State<JoinScreen> {
         alignLabelWithHint: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
-    );
-  }
-}
-
-class IncomingCallAlert extends StatelessWidget {
-  final String callerId;
-  final VoidCallback onReject;
-  final VoidCallback onAccept;
-
-  const IncomingCallAlert({
-    super.key,
-    required this.callerId,
-    required this.onReject,
-    required this.onAccept,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      child: ListTile(
-        title: Text("Incoming Call from $callerId"),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.call_end),
-              color: Colors.redAccent,
-              onPressed: onReject,
-            ),
-            IconButton(
-              icon: const Icon(Icons.call),
-              color: Colors.greenAccent,
-              onPressed: onAccept,
-            ),
-          ],
         ),
       ),
     );

@@ -195,9 +195,11 @@
 //   }
 // }
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:prototype/resources/constants/colors.dart';
 import 'package:prototype/resources/constants/endpoints.dart';
 import 'package:prototype/view/auth/profile/profileView.dart';
+import 'package:prototype/view/callingScreen/callingManager.dart';
 import 'package:prototype/view/callingScreen/callingView.dart';
 import 'package:prototype/view/callingScreen/signalingServer.dart';
 import 'package:prototype/view/home/homeView.dart';
@@ -213,6 +215,7 @@ class BottomNB extends StatefulWidget {
 }
 
 class _BottomNBState extends State<BottomNB> {
+  bool dialogBoxPop = true;
   int _selectedIndex = 0;
   Map<String, dynamic>? incomingSDPOffer;
   bool _isDialogOpen = false;
@@ -254,27 +257,10 @@ class _BottomNBState extends State<BottomNB> {
       });
 
       // Show the dialog when an incoming call is detected
+      // _showIncomingCallDialog(data["callerId"], data["sdpOffer"]);
       _showIncomingCallDialog();
     });
   }
-
-  @override
-  void dispose() {
-    // Remove socket listeners
-    // socket?.off("newCall");
-    socket?.off("incomingCall");
-    socket?.off("newCall");
-    super.dispose();
-  }
-
-  // Handles navigation bar item taps
-  void _onNavItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  // Displays the incoming call dialog
 
   void _showIncomingCallDialog() {
     if (_isDialogOpen) return; // Prevent multiple dialogs
@@ -283,12 +269,13 @@ class _BottomNBState extends State<BottomNB> {
     showDialog(
       context: context,
       barrierDismissible: false, // Prevent dismissing by tapping outside
-      builder: (_) => AlertDialog(
+      builder: (context) => AlertDialog(
         title: const Text("Incoming Call"),
         content: Text("$callerId is calling you. Message: $message"),
         actions: [
           TextButton(
             onPressed: () {
+              Get.back();
               _dismissDialog(); // Close the dialog
               _rejectCall(); // Handle rejection logic
             },
@@ -296,6 +283,7 @@ class _BottomNBState extends State<BottomNB> {
           ),
           TextButton(
             onPressed: () {
+              Get.back();
               _dismissDialog(); // Close the dialog
               _acceptCall(); // Handle acceptance logic
             },
@@ -321,29 +309,65 @@ class _BottomNBState extends State<BottomNB> {
       // incomingSDPOffer = null;
     }
   }
+  // void _showIncomingCallDialog() {
+  //   // Show the dialog
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false, // Prevent dismissing by tapping outside
+  //     builder: (context) => AlertDialog(
+  //       title: const Text("Incoming Call"),
+  //       content: Text("$callerId is calling you. Message: $message"),
+  //       actions: [
+  //         TextButton(
+  //           onPressed: () {
+  //             Navigator.pop(context); // Close the dialog
+  //             _rejectCall(); // Handle rejection logic
+  //             setState(() {
+  //               dialogBoxPop = false;
+  //             });
+  //           },
+  //           child: const Text("Reject"),
+  //         ),
+  //         TextButton(
+  //           onPressed: () {
+  //             Navigator.pop(context); // Close the dialog
+  //             _acceptCall(); // Handle acceptance logic
+  //             setState(() {
+  //               dialogBoxPop = false;
+  //             });
+  //           },
+  //           child: const Text("Accept"),
+  //         ),
+  //       ],
+  //     ),
+  //   );
 
-  void _rejectCall() {
-    if (callerId != null) {
-      // Implement your logic for rejecting the call
-      // debugPrint("Call rejected from $callerId");
-      socket?.emit("rejectCall", {
-        "callerId": callerId,
-      });
-    }
+  //   // Automatically close the dialog after 5 seconds if no action is taken
+  //   if (dialogBoxPop) {
+  //     Future.delayed(const Duration(seconds: 5), () {
+  //       if (Navigator.canPop(context)) {
+  //         Navigator.pop(context); // Close the dialog
+  //       }
+  //     });
+  //   }
+  // }
+
+  @override
+  void dispose() {
+    // Remove socket listeners
+    socket?.off("newCall");
+    socket?.off("incomingCall");
+    super.dispose();
   }
 
-  void _acceptCall() {
-    if (callerId != null) {
-      // Navigate to the call screen
-      socket?.emit("acceptCall", {
-        "callerId": callerId,
-      });
-    }
-    _joinCall(
-        callerId: incomingSDPOffer!["callerId"],
-        calleeId: AllLocalData().userid!,
-        offer: incomingSDPOffer!['sdpOffer']);
+  // Handles navigation bar item taps
+  void _onNavItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
+
+  // Displays the incoming call dialog
 
   // void _showIncomingCallDialog(String callerId, dynamic sdpOffer) {
   //   if (_isDialogOpen) return; // Prevent multiple dialogs
@@ -415,13 +439,36 @@ class _BottomNBState extends State<BottomNB> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => CallView(
+        builder: (context) => CallView(
           callerId: callerId,
           calleeId: calleeId,
           offer: offer,
         ),
       ),
     );
+  }
+
+  void _rejectCall() {
+    if (callerId != null) {
+      // Implement your logic for rejecting the call
+      // debugPrint("Call rejected from $callerId");
+      socket?.emit("rejectCall", {
+        "callerId": callerId,
+      });
+    }
+  }
+
+  void _acceptCall() {
+    if (callerId != null) {
+      // Navigate to the call screen
+      socket?.emit("acceptCall", {
+        "callerId": callerId,
+      });
+    }
+    _joinCall(
+        callerId: incomingSDPOffer!["callerId"],
+        calleeId: AllLocalData().userid!,
+        offer: incomingSDPOffer!['sdpOffer']);
   }
 
   @override

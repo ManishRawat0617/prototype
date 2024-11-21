@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:prototype/view/auth/profile/profileView.dart';
-import 'package:prototype/view/callingScreen/callingView.dart';
-import 'package:prototype/view/callingScreen/joiningView.dart';
+import 'package:prototype/resources/constants/endpoints.dart';
+import 'package:prototype/view/auth/login/loginView.dart';
 import 'package:prototype/view/callingScreen/signalingServer.dart';
-import 'package:prototype/view/home/homeView.dart';
-import 'package:prototype/view/search/searchView.dart';
-import 'package:prototype/view/splash/splashView.dart';
 import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 
 Future<void> main() async {
@@ -14,6 +10,15 @@ Future<void> main() async {
   await AllLocalData().init();
   print("User Id : ");
   print(AllLocalData().userid);
+  // Initialize signalling service with websocket URL and caller ID
+
+  // const websocketUrl = "https://webrtc-7vws.onrender.com/";
+  if (AllLocalData().userid != null && AllLocalData().userid!.isNotEmpty) {
+    SignallingService.instance.init(
+      websocketUrl: EndPoints.websocketUrl,
+      selfCallerID: AllLocalData().userid!,
+    );
+  }
 
   runApp(const MyApp());
 }
@@ -40,10 +45,11 @@ class MyApp extends StatelessWidget {
       //   newcalleeId: "67287f3ef7f81ca139e5b225",
       // ),
 
-      home: HomeView(),
+      home: LoginView(),
     );
   }
 }
+
 
 // import 'dart:math';
 // import 'package:flutter/material.dart';

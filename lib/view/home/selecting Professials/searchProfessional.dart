@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:prototype/resources/constants/endpoints.dart';
 import 'package:prototype/view/home/bottomNav/bottomNav.dart';
+import 'package:prototype/view/home/selecting%20Professials/selected_professional.dart';
 import 'package:prototype/view/selected_people.dart/selected_people.dart';
 import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 
@@ -47,14 +48,14 @@ class GetRole {
   }
 }
 
-class SearchView extends StatefulWidget {
-  const SearchView({super.key});
+class SearcProfessionals extends StatefulWidget {
+  const SearcProfessionals({super.key});
 
   @override
-  State<SearchView> createState() => _SearchViewState();
+  State<SearcProfessionals> createState() => _SearcProfessionalsState();
 }
 
-class _SearchViewState extends State<SearchView> {
+class _SearcProfessionalsState extends State<SearcProfessionals> {
   // Instance of the GetRole
   final GetRole getRole = GetRole();
   List<Role> roles = [];
@@ -129,7 +130,7 @@ class _SearchViewState extends State<SearchView> {
                           onTap: () {
                             print(index.toString());
                             print(filteredRoles[index].title.toString());
-                            Get.to(SelectedPersonView(
+                            Get.to(SelectedProfessionals(
                                 selfCallerId: AllLocalData().userid!,
                                 role: filteredRoles[index].title));
                           },
