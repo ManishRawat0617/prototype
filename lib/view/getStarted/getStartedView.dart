@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:prototype/resources/constants/colors.dart';
+import 'package:prototype/resources/constants/app_Colors.dart';
 import 'package:prototype/view/auth/common/button.dart';
 import 'package:prototype/view/auth/login/loginView.dart'; // Import your custom color constants
 

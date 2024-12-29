@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' ;
+import 'package:http/http.dart';
+import 'package:prototype/resources/constants/endpoints.dart';
 
 class SignUpController extends GetxController {
   final TextEditingController nameController = TextEditingController();
@@ -16,14 +17,12 @@ class SignUpController extends GetxController {
   List<Model> demoapi = [];
 
   Future getApi() async {
-    final response =
-        await get(Uri.parse("https://demoapi-vxrg.onrender.com/"));
+    final response = await get(Uri.parse(EndPoints.baseURl));
     final data = jsonDecode(response.body.toString()) as List<dynamic>;
     demoapi = data.map((item) {
       return Model(message: item['message']);
     }).toList();
   }
-
 
   // Add role to the list, ensuring it's not a duplicate
   void addRole(String title) {

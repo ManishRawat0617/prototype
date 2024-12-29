@@ -52,14 +52,15 @@ class _ShowCalleeViewState extends State<ShowCalleeView> {
     socket?.on('accept', (data) {
       // if (data['callee'] == callList[currentIndex]) {
       setState(() {
-        callStatus = "Call accepted by ${callList[currentIndex]}.";
+        callStatus = "Call is accepted by ${callList[currentIndex]}.";
         callAccepted = true;
       });
       print(callStatus);
-      CallProfessialView(
+      Get.to(CallProfessialView(
         callerId: AllLocalData().userid!,
         calleeId: callList[currentIndex],
-      );
+      ));
+
       // Stop further calls if one is accepted
       _endCallSequence();
       // }

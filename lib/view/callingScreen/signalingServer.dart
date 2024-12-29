@@ -30,14 +30,13 @@
 //   }
 // }
 
-
 import 'dart:developer';
 import 'package:socket_io_client/socket_io_client.dart';
 
 class SignallingService {
   // Singleton instance of Socket
   Socket? socket;
-
+  bool _isConnected = false;
   SignallingService._();
   static final instance = SignallingService._();
 
@@ -50,6 +49,7 @@ class SignallingService {
 
     // Listen for connection events
     socket?.onConnect((_) {
+      _isConnected = true;
       log("Socket connected successfully.");
     });
 
@@ -60,6 +60,7 @@ class SignallingService {
 
     // Listen for disconnection events
     socket?.onDisconnect((_) {
+         _isConnected = false;
       log("Socket disconnected.");
     });
 
@@ -73,6 +74,7 @@ class SignallingService {
 
   void disconnect() {
     socket?.disconnect();
+    _isConnected = false;
     log("Socket manually disconnected.");
   }
 
@@ -80,4 +82,6 @@ class SignallingService {
     socket?.clearListeners();
     log("All socket listeners removed.");
   }
+
+  bool get isConnected => _isConnected;
 }

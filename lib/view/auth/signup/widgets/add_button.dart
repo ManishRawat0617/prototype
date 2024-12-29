@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:prototype/resources/constants/colors.dart';
+import 'package:prototype/resources/constants/app_Colors.dart';
 
 class AddButton extends StatelessWidget {
   final TextEditingController controller;
@@ -21,16 +21,16 @@ class AddButton extends StatelessWidget {
         GestureDetector(
       onTap: ontap,
       child: Container(
-        height: size.height * 0.06,
-        width: size.width * 0.13,
+        height: size.height * 0.05,
+        width: size.width * 0.18,
         decoration: BoxDecoration(
-            color: AppColors.emeraldGreen,
+            color: AppColors.buttonColor,
             borderRadius: BorderRadius.circular(10)),
         child: Center(
             child: Text(
           "Add",
           style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: size.height * 0.024),
+              fontWeight: FontWeight.bold, fontSize: size.height * 0.022),
         )),
       ),
     );

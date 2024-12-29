@@ -6,17 +6,21 @@ class InputBox extends StatelessWidget {
   String hintText;
   TextEditingController controller;
   Size size;
-  InputBox({super.key, required this.hintText, required this.size , required this.controller});
+  InputBox(
+      {super.key,
+      required this.hintText,
+      required this.size,
+      required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: SizedBox(
+      child: Container(
         height: size.height * 0.065,
         width: size.width * 0.87,
         child: TextFormField(
-          controller:  controller,
+          controller: controller,
           decoration: InputDecoration(
               hintText: hintText,
               border:

@@ -449,6 +449,10 @@ class _CallViewState extends State<CallView> {
 
   void _leaveCall() {
     Navigator.pop(context);
+    socket?.emit("endCall", {
+      "callerId": widget.callerId,
+      "calleeId": widget.calleeId,
+    });
   }
 
   void _toggleMic() {

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:prototype/resources/constants/appString.dart';
-import 'package:prototype/resources/constants/colors.dart';
+import 'package:prototype/resources/constants/app_Colors.dart';
 import 'package:prototype/view/auth/common/button.dart';
 import 'package:prototype/view/auth/common/inputBox.dart';
+import 'package:prototype/view/auth/common/input_field.dart';
+import 'package:prototype/view/auth/common/submit_button.dart';
+import 'package:prototype/view/auth/common/text_widget.dart';
 import 'package:prototype/view/auth/login/loginView.dart';
 
-import 'package:prototype/view/auth/signup/widgets/roleTextField.dart';
+import 'package:prototype/view/auth/signup/widgets/add_button.dart';
 import 'package:prototype/view/home/bottomNav/bottomNav.dart';
 import 'package:prototype/view/search/searchView.dart';
 import 'package:prototype/view_model/auth/post.dart';
 import 'package:prototype/view_model/auth/signupController.dart';
-import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 
 class SignupView extends StatefulWidget {
   const SignupView({super.key});
@@ -48,197 +50,422 @@ class _SignupViewState extends State<SignupView> {
     }
   }
 
-  final double gap = 0.03;
+  final double gap = 0.02;
 
   final signupController = Get.put(SignUpController());
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: size.height * 0.1,
-              ),
-              Text(
-                "Sign Up to the ${AppString.appTitle}",
-                style: TextStyle(
-                    fontSize: size.height * 0.029, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: size.height * gap,
-              ),
-              InputBox(
-                controller: signupController.nameController,
-                hintText: "Enter the name ",
-                size: size,
-              ),
-              SizedBox(
-                height: size.height * gap,
-              ),
-              InputBox(
-                controller: signupController.emailController,
-                hintText: "Enter the email address",
-                size: size,
-              ),
-              SizedBox(
-                height: size.height * gap,
-              ),
-              InputBox(
-                controller: signupController.passwordController,
-                hintText: "Enter the password ",
-                size: size,
-              ),
-              SizedBox(
-                height: size.height * gap,
-              ),
-              InputBox(
-                controller: signupController.phoneController,
-                hintText: "Enter the phone number",
-                size: size,
-              ),
-              SizedBox(
-                height: size.height * gap,
-              ),
-              // Choosing /Adding role textfield
-              Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Center(
-                  child: isLoading
-                      ? const CircularProgressIndicator()
-                      : errorMessage.isNotEmpty
-                          ? Text(
-                              errorMessage,
-                              style: const TextStyle(color: Colors.red),
-                            )
-                          : Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                DropdownButton<Role>(
-                                  hint: const Text("Select a Role"),
-                                  value: selectedRole,
-                                  isExpanded: true,
-                                  items: roles.map((Role role) {
-                                    return DropdownMenuItem<Role>(
-                                      value: role,
-                                      child: Text(role.title),
-                                    );
-                                  }).toList(),
-                                  onChanged: (Role? newValue) {
-                                    setState(() {
-                                      selectedRole = newValue;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                ),
-              ),
-              AddButton(
-                controller: signupController.roleController,
-                size: size,
-                ontap: () {
-                  signupController.addRole(selectedRole!.title.toString());
-                  signupController.roleController.clear();
-                },
-              ),
+      // body: Center(
+      //   child: SingleChildScrollView(
+      //     child: Column(
+      //       crossAxisAlignment: CrossAxisAlignment.center,
+      //       children: [
+      //         SizedBox(
+      //           height: size.height * 0.1,
+      //         ),
+      //         Text(
+      //           "Sign Up to the ${AppString.appTitle}",
+      //           style: TextStyle(
+      //               fontSize: size.height * 0.029, fontWeight: FontWeight.bold),
+      //         ),
+      //         SizedBox(
+      //           height: size.height * gap,
+      //         ),
 
-              SizedBox(
-                height: size.height * gap,
-              ),
-              // Role that the user selected or entered
-              Obx(
-                () => Container(
-                  height: size.height * 0.15,
-                  width: size.width * 0.8,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: AppColors.emeraldGreen.withOpacity(0.2),
-                      border: Border.all(width: 1.5)),
+      //         InputField(
+      //           controller: signupController.nameController,
+      //           label_Text: "Enter the name ",
+      //           hint_Text: "abc",
+      //         ),
+      //         SizedBox(
+      //           height: size.height * gap,
+      //         ),
+      //         InputBox(
+      //           controller: signupController.emailController,
+      //           hintText: "Enter the email address",
+      //           size: size,
+      //         ),
+      //         SizedBox(
+      //           height: size.height * gap,
+      //         ),
+      //         InputBox(
+      //           controller: signupController.passwordController,
+      //           hintText: "Enter the password ",
+      //           size: size,
+      //         ),
+      //         SizedBox(
+      //           height: size.height * gap,
+      //         ),
+      //         InputBox(
+      //           controller: signupController.phoneController,
+      //           hintText: "Enter the phone number",
+      //           size: size,
+      //         ),
+      //         SizedBox(
+      //           height: size.height * gap,
+      //         ),
+      //         // Choosing /Adding role textfield
+      //         Padding(
+      //           padding: const EdgeInsets.all(18.0),
+      //           child: Center(
+      //             child: isLoading
+      //                 ? const CircularProgressIndicator()
+      //                 : errorMessage.isNotEmpty
+      //                     ? Text(
+      //                         errorMessage,
+      //                         style: const TextStyle(color: Colors.red),
+      //                       )
+      //                     : Column(
+      //                         mainAxisAlignment: MainAxisAlignment.center,
+      //                         children: [
+      //                           DropdownButton<Role>(
+      //                             hint: const Text("Select a Role"),
+      //                             value: selectedRole,
+      //                             isExpanded: true,
+      //                             items: roles.map((Role role) {
+      //                               return DropdownMenuItem<Role>(
+      //                                 value: role,
+      //                                 child: Text(role.title),
+      //                               );
+      //                             }).toList(),
+      //                             onChanged: (Role? newValue) {
+      //                               setState(() {
+      //                                 selectedRole = newValue;
+      //                               });
+      //                             },
+      //                           ),
+      //                         ],
+      //                       ),
+      //           ),
+      //         ),
+      //         AddButton(
+      //           controller: signupController.roleController,
+      //           size: size,
+      //           ontap: () {
+      //             signupController.addRole(selectedRole!.title.toString());
+      //             signupController.roleController.clear();
+      //           },
+      //         ),
+
+      //         SizedBox(
+      //           height: size.height * gap,
+      //         ),
+      //         // Role that the user selected or entered
+      //         Obx(
+      //           () => Container(
+      //             height: size.height * 0.15,
+      //             width: size.width * 0.8,
+      //             decoration: BoxDecoration(
+      //                 borderRadius: BorderRadius.circular(10),
+      //                 color: AppColors.emeraldGreen.withOpacity(0.2),
+      //                 border: Border.all(width: 1.5)),
+      //             child: Center(
+      //               child: Center(
+      //                 child: Padding(
+      //                   padding: const EdgeInsets.all(8.0),
+      //                   child: SingleChildScrollView(
+      //                     child: Wrap(
+      //                       spacing: 8.0, // Horizontal space between chips
+      //                       runSpacing:
+      //                           8.0, // Vertical space between rows of chips
+      //                       children: signupController.roleList.map((skill) {
+      //                         return Chip(
+      //                           label: Text(skill),
+      //                           backgroundColor: Colors
+      //                               .grey[300], // Match the grey chip color
+      //                           deleteIcon: Icon(Icons.close),
+      //                           onDeleted: () {
+      //                             signupController.removeRole(skill);
+      //                             // Define the delete action here
+      //                             print('$skill deleted');
+      //                           },
+      //                         );
+      //                       }).toList(),
+      //                     ),
+      //                   ),
+      //                 ),
+      //               ),
+      //             ),
+      //           ),
+      //         ),
+
+      //         SizedBox(
+      //           height: size.height * 0.03,
+      //         ),
+      //         // Sign up Button
+      //         button(
+      //             size: size,
+      //             title: "Sign Up",
+      //             ontap: () {
+      //               PostData().registerUser(
+      //                   signupController.emailController.text.toString(),
+      //                   signupController.passwordController.text.toString(),
+      //                   signupController.phoneController.text.toString(),
+      //                   signupController.nameController.text.toString(),
+      //                   signupController.roleList);
+      //               print(signupController.roleList.toString());
+      //             }),
+      //         SizedBox(
+      //           height: size.height * 0.01,
+      //         ),
+      //         // Login section
+      //         Row(
+      //           mainAxisAlignment: MainAxisAlignment.center,
+      //           children: [
+      //             Text(
+      //               "Do have an account !",
+      //               style: TextStyle(fontSize: size.height * 0.027),
+      //             ),
+      //             SizedBox(
+      //               width: size.height * 0.02,
+      //             ),
+      //             GestureDetector(
+      //                 onTap: () {
+      //                   Get.to(LoginView());
+      //                 },
+      //                 child: Text(
+      //                   "Login",
+      //                   style: TextStyle(
+      //                       fontSize: size.height * 0.027, color: Colors.blue),
+      //                 )),
+      //           ],
+      //         ),
+
+      //         GestureDetector(
+      //             onTap: () {
+      //               Get.to(BottomNB());
+      //             },
+      //             child: Text(
+      //               "Login",
+      //               style: TextStyle(fontSize: 20, color: Colors.blue),
+      //             ))
+      //       ],
+      //     ),
+      //   ),
+      // ),
+      backgroundColor: AppColors.primaryColor,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          // sign up form container
+          child: Container(
+            width: size.width * 0.9, // width of the signup form white container
+            // height:
+            //     size.height * 0.95, // height of the signup form white container
+            decoration: BoxDecoration(
+              boxShadow: const [
+                BoxShadow(
+                    color: Colors.grey,
+                    spreadRadius: 1,
+                    offset: Offset(-1.5, 1.5),
+                    blurRadius: 3),
+              ],
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              children: [
+                const Padding(
+                  padding: const EdgeInsets.only(top: 15),
+                  child: TextWidget(
+                      title: "Sign Up To Solution Sphere",
+                      boldness: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: size.height * gap,
+                ),
+                InputField(
+                    controller: signupController.nameController,
+                    hint_Text: "abc",
+                    label_Text: "Enter the name"),
+                SizedBox(
+                  height: size.height * gap,
+                ),
+                InputField(
+                    controller: signupController.nameController,
+                    hint_Text: "abc",
+                    label_Text: "Enter the email"),
+                SizedBox(
+                  height: size.height * gap,
+                ),
+                InputField(
+                    controller: signupController.nameController,
+                    hint_Text: "abc",
+                    label_Text: "Enter the passsword"),
+                SizedBox(
+                  height: size.height * gap,
+                ),
+                InputField(
+                    controller: signupController.nameController,
+                    hint_Text: "abc",
+                    label_Text: "Enter the confirm password"),
+                SizedBox(
+                  height: size.height * gap,
+                ),
+                InputField(
+                    controller: signupController.nameController,
+                    hint_Text: "abc",
+                    label_Text: "Enter the confirm phone number"),
+                SizedBox(
+                  height: size.height * gap,
+                ),
+                // Choosing /Adding role textfield
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
                   child: Center(
+                    child: isLoading
+                        ? const CircularProgressIndicator()
+                        : errorMessage.isNotEmpty
+                            ? Text(
+                                errorMessage,
+                                style: const TextStyle(color: Colors.red),
+                              )
+                            : Container(
+                                decoration: BoxDecoration(
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Colors.grey,
+                                        spreadRadius: 1,
+                                        offset: Offset(-1, 1),
+                                        blurRadius: 1),
+                                  ],
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: DropdownButton<Role>(
+                                        hint: const Text("Select a Role"),
+                                        value: selectedRole,
+                                        isExpanded: true,
+                                        items: roles.map((Role role) {
+                                          return DropdownMenuItem<Role>(
+                                            value: role,
+                                            child: Text(role.title),
+                                          );
+                                        }).toList(),
+                                        onChanged: (Role? newValue) {
+                                          setState(() {
+                                            selectedRole = newValue;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                  ),
+                ),
+                SizedBox(
+                  height: size.height * gap,
+                ),
+                AddButton(
+                  controller: signupController.roleController,
+                  size: size,
+                  ontap: () {
+                    signupController.addRole(selectedRole!.title.toString());
+                    signupController.roleController.clear();
+                  },
+                ),
+
+                SizedBox(
+                  height: size.height * gap,
+                ),
+                // Role that the user selected or entered
+                Obx(
+                  () => Container(
+                    height: size.height * 0.15,
+                    width: size.width * 0.8,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: AppColors.primaryColor.withOpacity(0.2),
+                        border: Border.all(width: 1.5)),
                     child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SingleChildScrollView(
-                          child: Wrap(
-                            spacing: 8.0, // Horizontal space between chips
-                            runSpacing:
-                                8.0, // Vertical space between rows of chips
-                            children: signupController.roleList.map((skill) {
-                              return Chip(
-                                label: Text(skill),
-                                backgroundColor: Colors
-                                    .grey[300], // Match the grey chip color
-                                deleteIcon: Icon(Icons.close),
-                                onDeleted: () {
-                                  signupController.removeRole(skill);
-                                  // Define the delete action here
-                                  print('$skill deleted');
-                                },
-                              );
-                            }).toList(),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SingleChildScrollView(
+                            child: Wrap(
+                              spacing: 8.0, // Horizontal space between chips
+                              runSpacing:
+                                  8.0, // Vertical space between rows of chips
+                              children: signupController.roleList.map((skill) {
+                                return Chip(
+                                  label: TextWidget(
+                                    title: skill,
+                                    boldness: FontWeight.w500,
+                                    size: 15,
+                                  ),
+                                  backgroundColor:
+                                      AppColors.buttonColor.withOpacity(0.2),
+                                  // backgroundColor: Colors
+                                  //     .grey[300], // Match the grey chip color
+                                  deleteIcon: const Icon(
+                                    Icons.delete,
+                                    size: 20,
+                                  ),
+                                  onDeleted: () {
+                                    signupController.removeRole(skill);
+                                  },
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
 
-              SizedBox(
-                height: size.height * 0.03,
-              ),
-              // Sign up Button
-              button(
-                  size: size,
-                  title: "Sign Up",
-                  ontap: () {
-                    PostData().registerUser(
-                        signupController.emailController.text.toString(),
-                        signupController.passwordController.text.toString(),
-                        signupController.phoneController.text.toString(),
-                        signupController.nameController.text.toString(),
-                        signupController.roleList);
-                    print(signupController.roleList.toString());
-                  }),
-              SizedBox(
-                height: size.height * 0.01,
-              ),
-              // Login section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Do have an account !",
-                    style: TextStyle(fontSize: size.height * 0.027),
-                  ),
-                  SizedBox(
-                    width: size.height * 0.02,
-                  ),
-                  GestureDetector(
-                      onTap: () {
-                        Get.to(LoginView());
-                      },
-                      child: Text(
-                        "Login",
+                // signup button
+                SizedBox(
+                  height: size.height * gap,
+                ),
+                SubmitButton(title: "Sign Up"),
+                // sign up option
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Already have an account?",
                         style: TextStyle(
-                            fontSize: size.height * 0.027, color: Colors.blue),
-                      )),
-                ],
-              ),
-
-              GestureDetector(
-                  onTap: () {
-                    Get.to(BottomNB());
-                  },
-                  child: Text(
-                    "Login",
-                    style: TextStyle(fontSize: 20, color: Colors.blue),
-                  ))
-            ],
+                          fontSize: size.width * 0.04,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      SizedBox(width: size.width * 0.01),
+                      GestureDetector(
+                        onTap: () => Get.to(() => const SignupView()),
+                        child: Text(
+                          "Login",
+                          style: TextStyle(
+                            fontSize: size.width * 0.04,
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                    onTap: () {
+                      Get.to(BottomNB());
+                    },
+                    child: Text(
+                      "home Screen",
+                      style: TextStyle(fontSize: 20, color: Colors.blue),
+                    ))
+              ],
+            ),
           ),
         ),
       ),

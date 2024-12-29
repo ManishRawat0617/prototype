@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prototype/resources/constants/app_Colors.dart';
 
 class BlogView extends StatefulWidget {
   @override
@@ -49,7 +50,7 @@ class _BlogViewState extends State<BlogView> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Blog"),
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.buttonColor,
       ),
       body: Column(
         children: [

@@ -7,8 +7,9 @@ import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await AllLocalData().init();
-  print("User Id : "); 
+  print("User Id : ");
   print(AllLocalData().userid);
   // Initialize signalling service with websocket URL and caller ID
 
@@ -19,6 +20,7 @@ Future<void> main() async {
       selfCallerID: AllLocalData().userid!,
     );
   }
+  // await initializeServices();
 
   runApp(const MyApp());
 }
@@ -28,6 +30,9 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
+
+  /// Initialize Flutter Local Notifications
+
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Flutter Demo',
@@ -152,6 +157,132 @@ class MyApp extends StatelessWidget {
 //       body: Center(
 //         child: Text('Initialization failed. Please try again later.'),
 //       ),
+//     );
+//   }
+// }
+
+
+// import 'package:flutter/material.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:get/get.dart';
+// import 'package:prototype/resources/constants/endpoints.dart';
+// import 'package:prototype/view/auth/login/loginView.dart';
+// import 'package:prototype/view/callingScreen/signalingServer.dart';
+// import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
+// import 'package:workmanager/workmanager.dart'; // Workmanager for background tasks
+// import 'package:socket_io_client/socket_io_client.dart' as IO;
+
+// const String backgroundTaskName = "background_socket_task";
+
+// /// Background task callback
+// void callbackDispatcher() {
+//   Workmanager().executeTask((task, inputData) async {
+//     if (task == backgroundTaskName) {
+//       // Initialize WebSocket connection
+//       IO.Socket socket = IO.io(EndPoints.websocketUrl, <String, dynamic>{
+//         'transports': ['websocket'],
+//         'autoConnect': true,
+//       });
+
+//       socket.onConnect((_) {
+//         print("Background socket connected");
+//       });
+
+//       socket.on('incomingCall', (data) async {
+//         // Trigger a notification
+//         await showNotification("Incoming Call", "You have a call from ${data['callerId']}");
+//       });
+
+//       socket.onDisconnect((_) {
+//         print("Background socket disconnected");
+//       });
+//     }
+
+//     return Future.value(true);
+//   });
+// }
+
+// /// Initialize Flutter Local Notifications
+// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+//     FlutterLocalNotificationsPlugin();
+
+// void initializeNotifications() {
+//   const AndroidInitializationSettings initializationSettingsAndroid =
+//       AndroidInitializationSettings('app_icon'); // Use your app's icon
+
+//   const InitializationSettings initializationSettings =
+//       InitializationSettings(android: initializationSettingsAndroid);
+
+//   flutterLocalNotificationsPlugin.initialize(initializationSettings);
+// }
+
+// /// Display notifications
+// Future<void> showNotification(String title, String body) async {
+//   const AndroidNotificationDetails androidPlatformChannelSpecifics =
+//       AndroidNotificationDetails(
+//     'your_channel_id',
+//     'Your Channel Name',
+//     channelDescription: 'Your channel description',
+//     importance: Importance.max,
+//     priority: Priority.high,
+//   );
+
+//   const NotificationDetails platformChannelSpecifics =
+//       NotificationDetails(android: androidPlatformChannelSpecifics);
+
+//   await flutterLocalNotificationsPlugin.show(
+//     0,
+//     title,
+//     body,
+//     platformChannelSpecifics,
+//     payload: 'data',
+//   );
+// }
+
+// Future<void> main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+
+//   // Initialize shared preferences
+//   await AllLocalData().init();
+//   print("User Id : ${AllLocalData().userid}");
+
+//   // Initialize local notifications
+//   initializeNotifications();
+
+//   // Initialize signaling service
+//   if (AllLocalData().userid != null && AllLocalData().userid!.isNotEmpty) {
+//     SignallingService.instance.init(
+//       websocketUrl: EndPoints.websocketUrl,
+//       selfCallerID: AllLocalData().userid!,
+//     );
+//   }
+
+//   // Initialize Workmanager for background tasks
+//   Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+
+//   // Register the periodic background task
+//   Workmanager().registerPeriodicTask(
+//     "1",
+//     backgroundTaskName,
+//     frequency: const Duration(minutes: 15),
+//   );
+
+//   runApp(const MyApp());
+// }
+
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return GetMaterialApp(
+//       title: 'Flutter Demo',
+//       debugShowCheckedModeBanner: false,
+//       theme: ThemeData(
+//         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+//         useMaterial3: true,
+//       ),
+//       home: LoginView(),
 //     );
 //   }
 // }

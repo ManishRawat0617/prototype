@@ -194,9 +194,12 @@
 //     );
 //   }
 // }
+
 import 'package:flutter/material.dart';
-import 'package:prototype/resources/constants/colors.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:prototype/resources/constants/app_Colors.dart';
 import 'package:prototype/resources/constants/endpoints.dart';
+import 'package:prototype/view/auth/common/text_widget.dart';
 import 'package:prototype/view/auth/profile/profileView.dart';
 import 'package:prototype/view/callingScreen/callingView.dart';
 import 'package:prototype/view/callingScreen/signalingServer.dart';
@@ -220,6 +223,8 @@ class _BottomNBState extends State<BottomNB> {
   String? callerId;
   String? message;
 
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
   final List<Widget> pages = [
     HomeView(),
     SearchView(),
@@ -230,7 +235,7 @@ class _BottomNBState extends State<BottomNB> {
   @override
   void initState() {
     super.initState();
-
+    _initializeNotifications();
     // Initialize signaling service
     SignallingService.instance.init(
       websocketUrl: EndPoints.websocketUrl,
@@ -269,6 +274,7 @@ class _BottomNBState extends State<BottomNB> {
       // Show the dialog when an incoming call is detected
 
       _showIncomingCallDialogFromProfessials();
+      _showNotification();
     });
   }
 
@@ -289,6 +295,55 @@ class _BottomNBState extends State<BottomNB> {
     });
   }
 
+// notification
+
+  /// Initialize Flutter Local Notifications
+  void _initializeNotifications() {
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    // Android initialization
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings(
+            'icon'); // Replace 'icon' with your app icon in res/drawable
+
+    // iOS initialization (if needed)
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    // Set up initialization with a response callback
+    flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        print("Notification clicked! Payload: ${response.payload}");
+      },
+    );
+  }
+
+  /// Show Notification
+  Future<void> _showNotification() async {
+    print("function is called ");
+    const AndroidNotificationDetails androidDetails =
+        AndroidNotificationDetails(
+      'channel_id', // Unique ID for notification channel
+      'channel_name', // Channel name
+      channelDescription: 'Channel description',
+      importance: Importance.high,
+      priority: Priority.high,
+    );
+
+    const NotificationDetails notificationDetails = NotificationDetails(
+      android: androidDetails,
+    );
+
+    await flutterLocalNotificationsPlugin.show(
+      0, // Notification ID
+      'Incoming call', // Notification title
+      'Click to answer the call', // Notification body
+      notificationDetails,
+      payload:
+          'Hello from the notification!', // Custom data sent with the notification
+    );
+  }
   // Displays the incoming call dialog
 
   void _showIncomingCallDialog() {
@@ -350,9 +405,7 @@ class _BottomNBState extends State<BottomNB> {
   void _acceptCall() {
     if (callerId != null) {
       // Navigate to the call screen
-      socket?.emit("acceptCall", {
-        "callerId": callerId,
-      });
+      socket?.emit("acceptCall", {"callerId": callerId, "reply": "accept"});
     }
     _joinCall(
         callerId: incomingSDPOffer!["callerId"],
@@ -494,9 +547,9 @@ class _BottomNBState extends State<BottomNB> {
         ],
       ),
       bottomNavigationBar: Container(
-        height: size.height * 0.1,
+        height: size.height * 0.08,
         width: size.width,
-        decoration: BoxDecoration(color: AppColors.emeraldGreen),
+        decoration: BoxDecoration(color: AppColors.buttonColor),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -514,30 +567,316 @@ class _BottomNBState extends State<BottomNB> {
   Widget _buildNavIcon(int index, IconData iconData, String label) {
     return GestureDetector(
       onTap: () => _onNavItemTapped(index),
+      // bottom navigation icons
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             iconData,
-            size: 26,
+            size: 28,
             color: index == _selectedIndex
                 ? AppColors.lightGray
                 : AppColors.darkGray,
           ),
-          Text(
-            label,
-            style: TextStyle(
-              color: index == _selectedIndex
-                  ? AppColors.lightGray
-                  : AppColors.darkGray,
-              fontWeight:
-                  index == _selectedIndex ? FontWeight.bold : FontWeight.normal,
-              fontSize: 12,
-            ),
+          TextWidget(
+            title: label,
+            size: 12,
+            boldness:
+                index == _selectedIndex ? FontWeight.bold : FontWeight.normal,
+            color: index == _selectedIndex
+                ? AppColors.lightGray
+                : AppColors.darkGray,
           ),
         ],
       ),
     );
   }
 }
+
+// import 'package:flutter/material.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:prototype/resources/constants/colors.dart';
+// import 'package:prototype/resources/constants/endpoints.dart';
+// import 'package:prototype/view/auth/profile/profileView.dart';
+// import 'package:prototype/view/callingScreen/callingView.dart';
+// import 'package:prototype/view/callingScreen/signalingServer.dart';
+// import 'package:prototype/view/home/homeView.dart';
+// import 'package:prototype/view/search/searchView.dart';
+// import 'package:prototype/view/setting/settingView.dart';
+// import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
+
+// class BottomNB extends StatefulWidget {
+//   const BottomNB({super.key});
+
+//   @override
+//   State<BottomNB> createState() => _BottomNBState();
+// }
+
+// class _BottomNBState extends State<BottomNB> {
+//   int _selectedIndex = 0;
+//   Map<String, dynamic>? incomingSDPOffer;
+//   bool _isDialogOpen = false;
+//   final socket = SignallingService.instance.socket;
+//   String? callerId;
+//   String? message;
+
+//   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+//   final List<Widget> pages = [
+//     HomeView(),
+//     SearchView(),
+//     ProfileView(),
+//     SettingsView(),
+//   ];
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _initializeNotifications();
+//     _setupSignalingService();
+//     _listenForIncomingCalls();
+//   }
+
+//   void _setupSignalingService() {
+//     print("this is the bottom nnavigator");
+//     SignallingService.instance.init(
+//       websocketUrl: EndPoints.websocketUrl,
+//       selfCallerID: AllLocalData().userid!,
+//     );
+//   }
+
+//   void _listenForIncomingCalls() {
+//     socket?.on("incomingCall", (data) {
+//       _handleIncomingCall(data, fromProfessional: false);
+//     });
+
+//     socket?.on("incomingCallfromProfessial", (data) {
+//       _handleIncomingCall(data, fromProfessional: true);
+//     });
+
+//     socket?.on("newCall", (data) {
+//       setState(() => incomingSDPOffer = data);
+//     });
+//   }
+
+//   @override
+//   void dispose() {
+//     socket?.off("incomingCall");
+//     socket?.off("incomingCallfromProfessial");
+//     socket?.off("newCall");
+//     super.dispose();
+//   }
+
+//   void _handleIncomingCall(Map<String, dynamic> data,
+//       {required bool fromProfessional}) {
+//     setState(() {
+//       callerId = data['callerId'];
+//       message = data['message'];
+//     });
+
+//     if (fromProfessional) {
+//       _showIncomingCallDialogFromProfessional();
+//       _showNotification();
+//     } else {
+//       _showIncomingCallDialog();
+//       _showNotification();
+//       print("show the notification");
+//     }
+//   }
+
+//   /// Initialize Flutter Local Notifications
+//   void _initializeNotifications() {
+//     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+//     const initializationSettingsAndroid = AndroidInitializationSettings(
+//         'icon'); // Replace 'icon' with your app icon name in res/drawable
+//     const initializationSettings = InitializationSettings(
+//       android: initializationSettingsAndroid,
+//     );
+
+//     flutterLocalNotificationsPlugin.initialize(
+//       initializationSettings,
+//       onDidReceiveNotificationResponse: (response) {
+//         debugPrint("Notification clicked! Payload: ${response.payload}");
+//       },
+//     );
+//   }
+
+//   /// Show Notification
+//   Future<void> _showNotification() async {
+//     const androidDetails = AndroidNotificationDetails(
+//       'channel_id', // Unique ID for the notification channel
+//       'channel_name', // Channel name
+//       channelDescription: 'Channel description',
+//       importance: Importance.high,
+//       priority: Priority.high,
+//     );
+
+//     const notificationDetails = NotificationDetails(android: androidDetails);
+
+//     await flutterLocalNotificationsPlugin.show(
+//       0,
+//       'Incoming Call',
+//       'You have a new call from $callerId.',
+//       notificationDetails,
+//       payload: 'Call from $callerId',
+//     );
+//   }
+
+//   void _showIncomingCallDialog() {
+//     _showDialog(
+//       title: "Incoming Call",
+//       content: "$callerId is calling you. Message: $message",
+//       onAccept: _acceptCall,
+//       onReject: _rejectCall,
+//     );
+//   }
+
+//   void _showIncomingCallDialogFromProfessional() {
+//     _showDialog(
+//       title: "Incoming Call from Professional",
+//       content: "$callerId is calling you. Message: $message",
+//       onAccept: _acceptProfessionalCall,
+//       onReject: _rejectProfessionalCall,
+//     );
+//   }
+
+//   void _showDialog({
+//     required String title,
+//     required String content,
+//     required VoidCallback onAccept,
+//     required VoidCallback onReject,
+//   }) {
+//     if (_isDialogOpen) return;
+//     _isDialogOpen = true;
+
+//     showDialog(
+//       context: context,
+//       barrierDismissible: false,
+//       builder: (_) => AlertDialog(
+//         title: Text(title),
+//         content: Text(content),
+//         actions: [
+//           TextButton(
+//             onPressed: () {
+//               _dismissDialog();
+//               onReject();
+//             },
+//             child: const Text("Reject", style: TextStyle(color: Colors.red)),
+//           ),
+//           TextButton(
+//             onPressed: () {
+//               _dismissDialog();
+//               onAccept();
+//             },
+//             child: const Text("Accept", style: TextStyle(color: Colors.green)),
+//           ),
+//         ],
+//       ),
+//     );
+
+//     Future.delayed(const Duration(seconds: 10), () {
+//       if (_isDialogOpen) {
+//         _dismissDialog();
+//         onReject();
+//       }
+//     });
+//   }
+
+//   void _dismissDialog() {
+//     if (_isDialogOpen && Navigator.canPop(context)) {
+//       Navigator.pop(context);
+//       _isDialogOpen = false;
+//     }
+//   }
+
+//   void _rejectCall() {
+//     if (callerId != null) {
+//       socket?.emit("rejectCall", {"callerId": callerId});
+//     }
+//   }
+
+//   void _rejectProfessionalCall() {
+//     if (callerId != null) {
+//       socket?.emit("rejectCallOfProfessional", {"callerId": callerId});
+//     }
+//   }
+
+//   void _acceptCall() {
+//     socket?.emit("acceptCall", {"callerId": callerId});
+//     _joinCall();
+//   }
+
+//   void _acceptProfessionalCall() {
+//     socket?.emit("acceptCallOfProfessional", {"callerId": callerId});
+//   }
+
+//   void _joinCall() {
+//     if (incomingSDPOffer != null) {
+//       Navigator.push(
+//         context,
+//         MaterialPageRoute(
+//           builder: (_) => CallView(
+//             callerId: incomingSDPOffer!["callerId"],
+//             calleeId: AllLocalData().userid!,
+//             offer: incomingSDPOffer!['sdpOffer'],
+//           ),
+//         ),
+//       );
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     Size size = MediaQuery.of(context).size;
+
+//     return Scaffold(
+//       body: pages[_selectedIndex],
+//       bottomNavigationBar: Container(
+//         height: size.height * 0.1,
+//         width: size.width,
+//         decoration: BoxDecoration(color: AppColors.emeraldGreen),
+//         child: Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//           children: [
+//             _buildNavIcon(0, Icons.home, "Home"),
+//             _buildNavIcon(1, Icons.search, "Search"),
+//             _buildNavIcon(2, Icons.person, "Profile"),
+//             _buildNavIcon(3, Icons.settings, "Settings"),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _buildNavIcon(int index, IconData iconData, String label) {
+//     return GestureDetector(
+//       onTap: () => setState(() => _selectedIndex = index),
+//       child: Column(
+//         mainAxisSize: MainAxisSize.min,
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           Icon(
+//             iconData,
+//             size: 26,
+//             color: index == _selectedIndex
+//                 ? AppColors.lightGray
+//                 : AppColors.darkGray,
+//           ),
+//           Text(
+//             label,
+//             style: TextStyle(
+//               color: index == _selectedIndex
+//                   ? AppColors.lightGray
+//                   : AppColors.darkGray,
+//               fontWeight:
+//                   index == _selectedIndex ? FontWeight.bold : FontWeight.normal,
+//               fontSize: 12,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

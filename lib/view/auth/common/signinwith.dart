@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prototype/resources/constants/colors.dart';
+import 'package:prototype/resources/constants/app_Colors.dart';
 
 class SignInWith extends StatelessWidget {
   final VoidCallback? ontap;
@@ -10,7 +10,7 @@ class SignInWith extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = size.height * 0.08;
+    final height = size.height * 0.06;
     return GestureDetector(
       onTap: ontap,
       child: Container(

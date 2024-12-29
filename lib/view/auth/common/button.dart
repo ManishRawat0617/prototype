@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:prototype/resources/constants/colors.dart';
+import 'package:prototype/resources/constants/app_Colors.dart';
 
 class button extends StatelessWidget {
-  final VoidCallback? ontap;
-  final String title;
-  const button({
+  VoidCallback? ontap;
+  String title;
+
+  button({
     super.key,
     required this.size,
     this.ontap,
@@ -21,9 +22,8 @@ class button extends StatelessWidget {
         height: size.height * 0.08,
         width: size.width * 0.8,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: AppColors.emeraldGreen,
-        ),
+            borderRadius: BorderRadius.circular(10),
+            color: AppColors.buttonColor),
         child: Center(
           child: Text(
             title,

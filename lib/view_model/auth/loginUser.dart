@@ -42,11 +42,13 @@ class GetData {
         }
 
         // Navigate to HomeView with Get.off
+
         print('Response body: ${response.body.toString()}');
         Get.off(() => BottomNB());
         return true;
       } else {
         // Handle different response codes
+        print('Response body: ${response.body.toString()}');
         sharedPre.setBool(ConstantKey.IS_LOGIN, true);
         if (response.statusCode == 401) {
           print("Unauthorized access - check credentials");
