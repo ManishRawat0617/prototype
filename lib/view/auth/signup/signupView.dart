@@ -10,7 +10,7 @@ import 'package:prototype/view/auth/common/text_widget.dart';
 import 'package:prototype/view/auth/login/loginView.dart';
 
 import 'package:prototype/view/auth/signup/widgets/add_button.dart';
-import 'package:prototype/view/home/bottomNav/bottomNav.dart';
+import 'package:prototype/view/bottomNav/bottomNav.dart';
 import 'package:prototype/view/search/searchView.dart';
 import 'package:prototype/view_model/auth/post.dart';
 import 'package:prototype/view_model/auth/signupController.dart';

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:prototype/resources/constants/endpoints.dart';
-import 'package:prototype/view/home/bottomNav/bottomNav.dart';
+import 'package:prototype/view/bottomNav/bottomNav.dart';
 import 'package:prototype/view/selected_people.dart/selected_people.dart';
 import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 

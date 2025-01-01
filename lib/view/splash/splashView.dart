@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:prototype/resources/assets/image.dart';
 import 'package:prototype/resources/constants/keys.dart';
 import 'package:prototype/view/auth/login/loginView.dart';
-import 'package:prototype/view/home/bottomNav/bottomNav.dart';
+import 'package:prototype/view/bottomNav/bottomNav.dart';
 import 'package:prototype/view/home/homeView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

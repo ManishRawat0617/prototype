@@ -6,6 +6,7 @@ import 'package:prototype/view/auth/common/text_widget.dart';
 import 'package:prototype/view/home/widget/button_widget_home.dart';
 
 class ClickableBannerHome extends StatelessWidget {
+  final VoidCallback? ontap;
   final String? text1;
   final Color? text1Color;
   final String? text2;
@@ -28,7 +29,8 @@ class ClickableBannerHome extends StatelessWidget {
       this.text1,
       this.text2,
       this.text1Color,
-      this.text2Color});
+      this.text2Color,
+      this.ontap});
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +67,7 @@ class ClickableBannerHome extends StatelessWidget {
                 const Spacer(),
                 // button
                 ButtonWidget(
+                  ontap: ontap,
                   title: buttonText ?? "add title",
                   width: width,
                 ),

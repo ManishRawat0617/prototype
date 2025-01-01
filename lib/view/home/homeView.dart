@@ -11,6 +11,7 @@ import 'package:prototype/view/callingScreen/signalingServer.dart';
 import 'package:prototype/view/home/selecting%20Professials/searchProfessional.dart';
 import 'package:prototype/view/home/widget/clickable_banner_home.dart';
 import 'package:prototype/view/home/widget/clickable_widget_home.dart';
+import 'package:prototype/view/ml_search/ml_search_view.dart';
 import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -67,11 +68,14 @@ class _HomeViewState extends State<HomeView> {
                 height: size.height * 0.03,
               ),
               // AI barrier card
-              const ClickableBannerHome(
+              ClickableBannerHome(
                 text1: "AI at Your Fingertips",
                 text2: "Simplify, Solve, Succeed!",
                 buttonText: "Talk to AI",
                 imagePath: AppImages.aiRobotImage,
+                ontap: () {
+                  Get.to(MLSearchView());
+                },
               ),
               SizedBox(
                 height: size.height * 0.02,

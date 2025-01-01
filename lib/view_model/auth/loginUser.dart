@@ -5,7 +5,7 @@ import 'package:prototype/resources/constants/endpoints.dart';
 import 'package:prototype/resources/constants/keys.dart';
 import 'package:prototype/view/auth/login/loginView.dart';
 import 'package:prototype/view/callingScreen/signalingServer.dart';
-import 'package:prototype/view/home/bottomNav/bottomNav.dart';
+import 'package:prototype/view/bottomNav/bottomNav.dart';
 import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

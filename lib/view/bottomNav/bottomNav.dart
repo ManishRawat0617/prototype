@@ -237,10 +237,10 @@ class _BottomNBState extends State<BottomNB> {
     super.initState();
     _initializeNotifications();
     // Initialize signaling service
-    SignallingService.instance.init(
-      websocketUrl: EndPoints.websocketUrl,
-      selfCallerID: AllLocalData().userid!,
-    );
+    // SignallingService.instance.init(
+    //   websocketUrl: EndPoints.websocketUrl,
+    //   selfCallerID: AllLocalData().userid!,
+    // );
     _listenForIncomingCall();
     _listenForIncomingCallFromProfessials();
     // Listen for incoming call events
@@ -368,6 +368,7 @@ class _BottomNBState extends State<BottomNB> {
             onPressed: () {
               _dismissDialog(); // Close the dialog
               _acceptCall(); // Handle acceptance logic
+              
             },
             child: const Text("Accept", style: TextStyle(color: Colors.green)),
           ),
