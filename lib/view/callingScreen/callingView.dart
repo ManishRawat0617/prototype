@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:prototype/view/callingScreen/signalingServer.dart';
+import 'package:prototype/view_model/call/callController.dart';
 
 class CallView extends StatefulWidget {
   final String callerId, calleeId;
@@ -26,6 +27,8 @@ class _CallViewState extends State<CallView> {
   RTCPeerConnection? _rtcPeerConnection;
   List<RTCIceCandidate> rtcIceCandidates = [];
   bool isAudioOn = true, isVideoOn = true, isFrontCameraSelected = true;
+  DateTime? startTIme;
+  DateTime? endTime;
 
   @override
   void initState() {
@@ -34,6 +37,7 @@ class _CallViewState extends State<CallView> {
     _localRTCVideoRenderer.initialize();
     _remoteRTCVideoRenderer.initialize();
     _listenForResponse();
+    _listenForEndCall();
   }
 
   @override
@@ -42,16 +46,17 @@ class _CallViewState extends State<CallView> {
   }
 
   void _listenForResponse() {
-    socket?.on("accept", (data) {
-      var calleeId = data["calleeId"];
-      var response = data['reply'];
+    // socket?.on("accept", (data) {
+    //   var calleeId = data["calleeId"];
+    //   var response = data['reply'];
 
-      // setState(() {
-      //   callStatus = response;
-      // });
-    });
+    //   // setState(() {
+    //   //   callStatus = response;
+    //   // });
+    // });
     // it will make the call only if the reply is accept
-
+    // print("Time");
+    // print(DateTime.now());
     _setupPeerConnection();
   }
 
@@ -61,6 +66,8 @@ class _CallViewState extends State<CallView> {
   }
 
   Future<void> _setupPeerConnection() async {
+    // to save the start time
+    startTIme = DateTime.now();
     try {
       _rtcPeerConnection = await createPeerConnection({
         'iceServers': [
@@ -164,6 +171,17 @@ class _CallViewState extends State<CallView> {
         }
       });
     }
+  }
+
+  void _listenForEndCall() {
+    socket?.on("callEnded", (data) => {a()});
+  }
+
+  void a() {
+    endTime = DateTime.now();
+    CallingSession().postCallingSession(
+        startTIme, endTime, widget.callerId, widget.calleeId);
+    Navigator.pop(context);
   }
 
   void _leaveCall() {
@@ -277,6 +295,7 @@ class _CallViewState extends State<CallView> {
     _rtcPeerConnection?.dispose();
     socket?.off("IceCandidate");
     socket?.off("callAnswered");
+    socket?.off("callEnded");
     super.dispose();
   }
 }

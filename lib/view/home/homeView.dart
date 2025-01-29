@@ -12,6 +12,7 @@ import 'package:prototype/view/home/selecting%20Professials/searchProfessional.d
 import 'package:prototype/view/home/widget/clickable_banner_home.dart';
 import 'package:prototype/view/home/widget/clickable_widget_home.dart';
 import 'package:prototype/view/ml_search/ml_search_view.dart';
+import 'package:prototype/view/subcribe/subscription_view.dart';
 import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -115,10 +116,13 @@ class _HomeViewState extends State<HomeView> {
                     },
                   ),
                   // subscribe widget
-                  const ClickableWidgetHome(
+                  ClickableWidgetHome(
                     title: "Subscribe",
                     color: AppColors.moreFeatureWidget_2,
                     icon: AppIcons.crownIconImage,
+                    ontap: () {
+                      Get.to(SubscriptionView());
+                    },
                   ),
                   // blog widget
                   ClickableWidgetHome(

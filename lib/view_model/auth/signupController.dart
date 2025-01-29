@@ -6,11 +6,35 @@ import 'package:http/http.dart';
 import 'package:prototype/resources/constants/endpoints.dart';
 
 class SignUpController extends GetxController {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController roleController = TextEditingController();
+  final TextEditingController nameController =
+      TextEditingController(); // for name
+  final TextEditingController emailController =
+      TextEditingController(); // for email
+  final TextEditingController passwordController =
+      TextEditingController(); // for password
+  final TextEditingController phoneController =
+      TextEditingController(); // for phone number
+  final TextEditingController roleController =
+      TextEditingController(); //  for role
+
+  final TextEditingController languageController =
+      TextEditingController(); // For the "Languages" field
+  final TextEditingController languageLevelController =
+      TextEditingController(); // For the "Beginner" dropdown
+
+  final TextEditingController degreeController =
+      TextEditingController(); // For the "Degree" field
+  final TextEditingController institutionController =
+      TextEditingController(); // For the "Institution" field
+  final TextEditingController fieldOfStudyController =
+      TextEditingController(); // For the "Field of Study" field
+  final TextEditingController startDateController =
+      TextEditingController(); // For the "Start Date" field
+  final TextEditingController endDateController =
+      TextEditingController(); // For the "End Date" field
+
+  final TextEditingController experienceController =
+      TextEditingController(); // For the "Experience" field
 
   // Strongly typed RxList for roles
   final RxList<String> roleList = <String>[].obs;

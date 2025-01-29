@@ -16,14 +16,14 @@ import 'package:prototype/view/search/searchView.dart';
 import 'package:prototype/view_model/auth/post.dart';
 import 'package:prototype/view_model/auth/signupController.dart';
 
-class SignupView extends StatefulWidget {
-  const SignupView({super.key});
+class ExperienceFormView extends StatefulWidget {
+  const ExperienceFormView({super.key});
 
   @override
-  State<SignupView> createState() => _SignupViewState();
+  State<ExperienceFormView> createState() => _ExperienceFormViewState();
 }
 
-class _SignupViewState extends State<SignupView> {
+class _ExperienceFormViewState extends State<ExperienceFormView> {
   final GetRole getRole = GetRole();
   List<Role> roles = [];
   Role? selectedRole;
@@ -51,12 +51,11 @@ class _SignupViewState extends State<SignupView> {
     }
   }
 
-  final double gap = 0.01;
-
   final signupController = Get.put(SignUpController());
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    final double gap = 0.01;
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
       body: SingleChildScrollView(
@@ -83,65 +82,10 @@ class _SignupViewState extends State<SignupView> {
                 const Padding(
                   padding: EdgeInsets.only(top: 15),
                   child: TextWidget(
-                      title: "Sign Up To Solution Sphere",
-                      boldness: FontWeight.bold),
+                      title: "Experience Form", boldness: FontWeight.bold),
                 ),
                 SizedBox(
                   height: size.height * gap,
-                ),
-               const NameWidget(
-                  title: "First Name",
-                  hintText: "abc",
-                  labelText: "Enter your first name",
-                ),
-                SizedBox(
-                  height: size.height * gap,
-                ),
-              const  NameWidget(
-                  title: "Last Name",
-                  hintText: "abc",
-                  labelText: "Enter your last name",
-                ),
-                SizedBox(
-                  height: size.height * gap,
-                ),
-               const NameWidget(
-                  title: "Email",
-                  hintText: "abc@email.com",
-                  labelText: "Enter your email",
-                ),
-                SizedBox(
-                  height: size.height * gap,
-                ),
-              const  NameWidget(
-                  title: "Password",
-                  hintText: "adf233423bdfxdsc",
-                  labelText: "Enter your password",
-                ),
-                SizedBox(
-                  height: size.height * gap,
-                ),
-              const  NameWidget(
-                  title: "Phone Number",
-                  hintText: "abc",
-                  labelText: "Enter your phone number",
-                ),
-                SizedBox(
-                  height: size.height * gap,
-                ),
-              const  NameWidget(
-                  title: "Country",
-                  hintText: "India",
-                  labelText: "Enter your country",
-                ),
-                SizedBox(
-                  height: size.height * gap,
-                ),
-              const  NameWidget(
-                  title: "Address",
-                  hintText:
-                      "123 Main Street, Apartment 2, Anytown, CA 12345, USA",
-                  labelText: "Enter your address",
                 ),
 
                 // signup button
@@ -165,7 +109,7 @@ class _SignupViewState extends State<SignupView> {
                       SizedBox(width: size.width * 0.01),
                       GestureDetector(
                         // onTap: () => Get.to(() => const SignupView()),
-                        onTap: () => Get.to(() => const ExperienceFormView()),
+                        // onTap: () => Get.to(() => const ExperienceForm()),
                         child: Text(
                           "Login",
                           style: TextStyle(
@@ -182,7 +126,7 @@ class _SignupViewState extends State<SignupView> {
                     onTap: () {
                       Get.to(BottomNB());
                     },
-                    child:const Text(
+                    child: Text(
                       "home Screen",
                       style: TextStyle(fontSize: 20, color: Colors.blue),
                     ))
