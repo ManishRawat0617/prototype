@@ -1,3 +1,172 @@
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+// import 'package:prototype/data/network/network_service_api.dart';
+// import 'package:prototype/resources/constants/endpoints.dart';
+// import 'package:prototype/view/callingScreen/signalingServer.dart';
+// import 'package:prototype/view/testing/newSearchController.dart';
+
+// class NewSearchScreen extends StatefulWidget {
+//   const NewSearchScreen({super.key});
+
+//   @override
+//   State<NewSearchScreen> createState() => _NewSearchScreenState();
+// }
+
+// class _NewSearchScreenState extends State<NewSearchScreen> {
+//   final socket = SignallingService.instance.socket;
+//   final controller = Get.put(Newsearchcontroller());
+
+//   final TextEditingController categoryController = TextEditingController();
+//   final TextEditingController roleController = TextEditingController();
+
+//   String searchResult = "No results found";
+//   String messageReceived = "";
+
+//   List<String> userQueue = [];
+//   int currentUserIndex = 0;
+
+//   @override
+//   void initState() {
+//     // TODO: implement initState
+//     super.initState();
+//     listenForResponse();
+//   }
+
+//   void callthepeople(String userId) {
+//     socket?.emit("call", {userId});
+//   }
+
+//   void listenForResponse() {
+//     socket?.on("call", (data) {
+//       messageReceived = data;
+//       print(data);
+//     });
+//   }
+
+//   @override
+//   void dispose() {
+//     categoryController.dispose();
+//     roleController.dispose();
+//     super.dispose();
+//   }
+
+//   Future<void> searchProfessionals() async {
+//     if (categoryController.text.isEmpty) {
+//       setState(() => searchResult = "Please enter a category.");
+//       return;
+//     }
+
+//     userQueue.clear();
+//     currentUserIndex = 0;
+
+//     try {
+//       final response = await NetworkServiceApi().postData(
+//         EndPoints.userSearch,
+//         {"category": categoryController.text},
+//       );
+
+//       if (response != null && response["data"] is List) {
+//         List<Map<String, dynamic>> users =
+//             List<Map<String, dynamic>>.from(response["data"]);
+
+//         userQueue = users
+//             .map((user) => user["user_id"]?.toString() ?? '')
+//             .where((id) => id.isNotEmpty)
+//             .toList();
+
+//         if (userQueue.isNotEmpty) {
+//           setState(() => searchResult = "Users found: ${userQueue.join(", ")}");
+//           _sendUserId(); // Start sending user IDs one by one
+//         } else {
+//           setState(() => searchResult = "No users found.");
+//         }
+//       } else {
+//         setState(() => searchResult = "Invalid response received.");
+//       }
+//     } catch (error) {
+//       setState(() => searchResult = "Error: $error");
+//     }
+//   }
+
+//   void _sendUserId() {
+//     if (currentUserIndex >= userQueue.length) {
+//       return; // Stop if all user IDs are processed
+//     }
+
+//     String userId = userQueue[currentUserIndex];
+//     socket?.emit("search", {"user_id": userId});
+//     debugPrint("Sent search request for: $userId");
+
+//     // Listen for success/failure before sending next request
+//     socket?.once("searchSuccess", (data) {
+//       debugPrint("Search successful for $userId: $data");
+//       callthepeople();
+//       currentUserIndex++;
+//       // _sendUserId(); // Send next user_id after receiving a response
+//     });
+
+//     socket?.once("searchFailed", (data) {
+//       debugPrint("Search failed for $userId: $data");
+//       currentUserIndex++;
+//       _sendUserId(); // Send next user_id after receiving a response
+//     });
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: const Text("Search Professionals")),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             _buildTextField(categoryController, "Category", "Enter category"),
+//             const SizedBox(height: 10),
+//             _buildTextField(roleController, "Role (Optional)", "Enter role"),
+//             const SizedBox(height: 20),
+//             _buildSearchButton(),
+//             const SizedBox(height: 20),
+//             Center(
+//               child: Text(
+//                 searchResult,
+//                 style:
+//                     const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+//                 textAlign: TextAlign.center,
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _buildTextField(
+//       TextEditingController controller, String label, String hint) {
+//     return TextFormField(
+//       controller: controller,
+//       decoration: InputDecoration(
+//         labelText: label,
+//         hintText: hint,
+//         border: const OutlineInputBorder(),
+//       ),
+//     );
+//   }
+
+//   Widget _buildSearchButton() {
+//     return Center(
+//       child: ElevatedButton(
+//         onPressed: searchProfessionals,
+//         style: ElevatedButton.styleFrom(
+//           backgroundColor: Colors.blueAccent,
+//           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+//           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+//         ),
+//         child: Text("Search", style: TextStyle(color: Colors.white)),
+//       ),
+//     );
+//   }
+// }
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -8,14 +177,14 @@ import 'package:prototype/view/callingScreen/signalingServer.dart';
 import 'package:prototype/view/testing/newSearchController.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
-class SearchView extends StatefulWidget {
-  const SearchView({super.key});
+class NewSearchScreen extends StatefulWidget {
+  const NewSearchScreen({super.key});
 
   @override
-  State<SearchView> createState() => _SearchViewState();
+  State<NewSearchScreen> createState() => _NewSearchScreenState();
 }
 
-class _SearchViewState extends State<SearchView> {
+class _NewSearchScreenState extends State<NewSearchScreen> {
   final socket = SignallingService.instance.socket;
   final controller = Get.put(Newsearchcontroller());
 
@@ -63,7 +232,7 @@ class _SearchViewState extends State<SearchView> {
   void showIncomingCallDialog(
       String callerName, String callerId, Socket socket) {
     if (!mounted) return; // Ensure widget is mounted before showing dialog
-    // _showNotification();
+    _showNotification();
     showDialog(
       context: context,
       barrierDismissible: false, // Prevent dismissing by tapping outside

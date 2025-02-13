@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:prototype/resources/constants/app_Colors.dart';
 import 'package:prototype/resources/constants/userInfo.dart';
 import 'package:prototype/view/auth/common/text_widget.dart';
 import 'package:prototype/view/auth/profile/widget/card_widget.dart';
 import 'package:prototype/view/auth/profile/widget/small_card_widget.dart';
+import 'package:prototype/view_model/auth/loginController.dart';
 import 'package:prototype/view_model/auth/loginUser.dart';
 import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 
-class ProfileView extends StatelessWidget {
+class ProfileView extends StatefulWidget {
+  @override
+  State<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
+  final loginController = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -34,96 +42,6 @@ class ProfileView extends StatelessWidget {
           )
         ],
       ),
-      // body: SingleChildScrollView(
-      //   child: Column(
-      //     children: [
-      //       // Header Section
-      //       Container(
-      //         width: 200,
-      //         padding: EdgeInsets.symmetric(vertical: 20),
-      //         color: Colors.green,
-      //         child: Column(
-      //           mainAxisAlignment: MainAxisAlignment.center,
-      //           children: [
-      //             CircleAvatar(
-      //               radius: 50,
-      //               child: Icon(
-      //                 Icons.person,
-      //                 size: size.height * 0.1,
-      //               ),
-      //             ),
-      //             SizedBox(height: 10),
-      //             Text(
-      //               userName.toString(),
-      //               style: TextStyle(
-      //                   color: Colors.white,
-      //                   fontSize: 24,
-      //                   fontWeight: FontWeight.bold),
-      //             ),
-      //             Text(
-      //               email.toString(),
-      //               style: TextStyle(color: Colors.white70),
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //       // Stats Section
-      //       Padding(
-      //         padding: EdgeInsets.all(14),
-      //         child: Row(
-      //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-      //           children: [
-      //             _buildStatItem("Followers", "120"),
-      //             _buildStatItem("Following", "80"),
-      //             _buildStatItem("Posts", "35"),
-      //           ],
-      //         ),
-      //       ),
-      //       // Activity Section
-      //       ListTile(
-      //         minTileHeight: size.height * 0.065,
-      //         leading: Icon(Icons.history),
-      //         title: Text("Recent Activities"),
-      //         trailing: Icon(Icons.arrow_forward),
-      //         onTap: () {
-      //           // Navigate to activities page
-      //         },
-      //       ),
-      //       Divider(),
-      //       // Personal Info
-      //       ListTile(
-      //         minTileHeight: size.height * 0.065,
-      //         leading: Icon(Icons.person),
-      //         title: Text("Personal Information"),
-      //         trailing: Icon(Icons.edit),
-      //         onTap: () {
-      //           // Edit personal information
-      //         },
-      //       ),
-      //       Divider(),
-      //       // Preferences
-      //       ListTile(
-      //         minTileHeight: size.height * 0.065,
-      //         leading: Icon(Icons.favorite),
-      //         title: Text("Interests & Preferences"),
-      //         trailing: Icon(Icons.arrow_forward),
-      //         onTap: () {
-      //           // Navigate to preferences
-      //         },
-      //       ),
-      //       ElevatedButton(
-      //           style: ElevatedButton.styleFrom(
-      //               backgroundColor: AppColors.emeraldGreen),
-      //           onPressed: () {
-      //             GetData().logoutUser();
-      //           },
-      //           child: Text(
-      //             "Log Out",
-      //             style: TextStyle(color: Colors.white),
-      //           ))
-      //     ],
-      //   ),
-      // ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -184,9 +102,9 @@ class ProfileView extends StatelessWidget {
                   padding: const EdgeInsets.all(18.0),
                   child: Row(
                     children: [
-                      const TextWidget(
+                      TextWidget(
                         title: "Subscribe to pro plan",
-                        size: 17,
+                        size: size.height * 0.02,
                         boldness: FontWeight.bold,
                       ),
                       const Spacer(),
@@ -282,7 +200,7 @@ class ProfileView extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.buttonColor),
                   onPressed: () {
-                    GetData().logoutUser();
+                    loginController.logoutUser();
                   },
                   child: const TextWidget(
                     title: "Log Out",

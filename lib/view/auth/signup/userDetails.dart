@@ -1,54 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:prototype/resources/constants/appString.dart';
 import 'package:prototype/resources/constants/app_Colors.dart';
-import 'package:prototype/view/auth/common/button.dart';
-import 'package:prototype/view/auth/common/inputBox.dart';
-import 'package:prototype/view/auth/common/input_field.dart';
 import 'package:prototype/view/auth/common/submit_button.dart';
 import 'package:prototype/view/auth/common/text_widget.dart';
 import 'package:prototype/view/auth/login/loginView.dart';
-import 'package:prototype/view/auth/signup/technolodyExperience_form.dart';
-
-import 'package:prototype/view/auth/signup/widgets/add_button.dart';
+import 'package:prototype/view/auth/signup/widgets/nameTagWithInputWidget.dart';
 import 'package:prototype/view/bottomNav/bottomNav.dart';
 import 'package:prototype/view/search/searchView.dart';
-import 'package:prototype/view_model/auth/post.dart';
 import 'package:prototype/view_model/auth/signupController.dart';
 
-class SignupView extends StatefulWidget {
-  const SignupView({super.key});
+class UserDetailsView extends StatefulWidget {
+  const UserDetailsView({super.key});
 
   @override
-  State<SignupView> createState() => _SignupViewState();
+  State<UserDetailsView> createState() => _UserDetailsViewState();
 }
 
-class _SignupViewState extends State<SignupView> {
-  final GetRole getRole = GetRole();
-  List<Role> roles = [];
-  Role? selectedRole;
+class _UserDetailsViewState extends State<UserDetailsView> {
   bool isLoading = true;
   String errorMessage = '';
 
   @override
   void initState() {
     super.initState();
-    fetchRoles();
-  }
-
-  Future<void> fetchRoles() async {
-    try {
-      final fetchedRoles = await getRole.allRole();
-      setState(() {
-        roles = fetchedRoles;
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        errorMessage = e.toString();
-        isLoading = false;
-      });
-    }
   }
 
   final double gap = 0.01;
@@ -89,66 +63,78 @@ class _SignupViewState extends State<SignupView> {
                 SizedBox(
                   height: size.height * gap,
                 ),
-               const NameWidget(
+                NameTagWithInputFieldWidget(
                   title: "First Name",
                   hintText: "abc",
                   labelText: "Enter your first name",
+                  controller: signupController.firstNameController,
                 ),
                 SizedBox(
                   height: size.height * gap,
                 ),
-              const  NameWidget(
+                NameTagWithInputFieldWidget(
                   title: "Last Name",
                   hintText: "abc",
                   labelText: "Enter your last name",
+                  controller: signupController.lastNameController,
                 ),
                 SizedBox(
                   height: size.height * gap,
                 ),
-               const NameWidget(
+                NameTagWithInputFieldWidget(
                   title: "Email",
                   hintText: "abc@email.com",
                   labelText: "Enter your email",
+                  controller: signupController.emailController,
                 ),
                 SizedBox(
                   height: size.height * gap,
                 ),
-              const  NameWidget(
+                NameTagWithInputFieldWidget(
                   title: "Password",
                   hintText: "adf233423bdfxdsc",
                   labelText: "Enter your password",
+                  controller: signupController.passwordController,
                 ),
                 SizedBox(
                   height: size.height * gap,
                 ),
-              const  NameWidget(
+                NameTagWithInputFieldWidget(
                   title: "Phone Number",
                   hintText: "abc",
                   labelText: "Enter your phone number",
+                  controller: signupController.phoneController,
                 ),
                 SizedBox(
                   height: size.height * gap,
                 ),
-              const  NameWidget(
+                NameTagWithInputFieldWidget(
                   title: "Country",
                   hintText: "India",
                   labelText: "Enter your country",
+                  controller: signupController.countryController,
                 ),
                 SizedBox(
                   height: size.height * gap,
                 ),
-              const  NameWidget(
+                NameTagWithInputFieldWidget(
                   title: "Address",
                   hintText:
                       "123 Main Street, Apartment 2, Anytown, CA 12345, USA",
                   labelText: "Enter your address",
+                  controller: signupController.addressController,
                 ),
 
                 // signup button
                 SizedBox(
                   height: size.height * gap + 10,
                 ),
-                SubmitButton(title: "Create Profile"),
+                SubmitButton(
+                  title: "Create Profile",
+                  ontap: () {
+                    signupController.postUserDetails();
+                  },
+                ),
                 // sign up option
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
@@ -165,7 +151,7 @@ class _SignupViewState extends State<SignupView> {
                       SizedBox(width: size.width * 0.01),
                       GestureDetector(
                         // onTap: () => Get.to(() => const SignupView()),
-                        onTap: () => Get.to(() => const ExperienceFormView()),
+                        onTap: () => Get.to(() => const LoginView()),
                         child: Text(
                           "Login",
                           style: TextStyle(
@@ -180,9 +166,9 @@ class _SignupViewState extends State<SignupView> {
                 ),
                 GestureDetector(
                     onTap: () {
-                      Get.to(BottomNB());
+                      Get.to(const BottomNB());
                     },
-                    child:const Text(
+                    child: const Text(
                       "home Screen",
                       style: TextStyle(fontSize: 20, color: Colors.blue),
                     ))
@@ -191,43 +177,6 @@ class _SignupViewState extends State<SignupView> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class NameWidget extends StatelessWidget {
-  final TextEditingController? controller;
-  final String title;
-  final String hintText;
-  final String labelText;
-  const NameWidget(
-      {super.key,
-      this.controller,
-      required this.title,
-      required this.hintText,
-      required this.labelText});
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 20.0),
-          child: Align(
-              alignment: Alignment.centerLeft,
-              child: TextWidget(
-                title: title,
-                size: 18,
-                boldness: FontWeight.w500,
-              )),
-        ),
-        SizedBox(
-          height: size.height * 0.005,
-        ),
-        InputField(
-            controller: controller, hint_Text: hintText, label_Text: labelText),
-      ],
     );
   }
 }

@@ -13,6 +13,8 @@ import 'package:prototype/view/home/widget/clickable_banner_home.dart';
 import 'package:prototype/view/home/widget/clickable_widget_home.dart';
 import 'package:prototype/view/ml_search/ml_search_view.dart';
 import 'package:prototype/view/subcribe/subscription_view.dart';
+import 'package:prototype/view/testing/newSearch.dart';
+import 'package:prototype/view/testing/testing.dart';
 import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -131,7 +133,8 @@ class _HomeViewState extends State<HomeView> {
                     icon: AppIcons.blogIconImage,
                     height: 70,
                     ontap: () {
-                      Get.to(BlogView());
+                      // Get.to(BlogView());
+                      Get.to(NewSearchScreen());
                     },
                   ),
                 ],

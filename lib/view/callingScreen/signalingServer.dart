@@ -60,7 +60,7 @@ class SignallingService {
 
     // Listen for disconnection events
     socket?.onDisconnect((_) {
-         _isConnected = false;
+      _isConnected = false;
       log("Socket disconnected.");
     });
 

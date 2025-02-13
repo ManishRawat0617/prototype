@@ -3,13 +3,10 @@ import 'package:flutter/widgets.dart';
 import 'package:prototype/resources/constants/app_Colors.dart';
 
 class AddButton extends StatelessWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final VoidCallback ontap;
   const AddButton(
-      {super.key,
-      required this.size,
-      required this.ontap,
-      required this.controller});
+      {super.key, required this.size, required this.ontap, this.controller});
 
   final Size size;
 
@@ -21,7 +18,7 @@ class AddButton extends StatelessWidget {
         GestureDetector(
       onTap: ontap,
       child: Container(
-        height: size.height * 0.05,
+        height: size.height * 0.04,
         width: size.width * 0.18,
         decoration: BoxDecoration(
             color: AppColors.buttonColor,
@@ -30,7 +27,7 @@ class AddButton extends StatelessWidget {
             child: Text(
           "Add",
           style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: size.height * 0.022),
+              fontWeight: FontWeight.bold, fontSize: size.height * 0.018),
         )),
       ),
     );

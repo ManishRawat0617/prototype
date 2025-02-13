@@ -11,10 +11,12 @@ class TextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
+      
       title,
       style: TextStyle(
           fontSize: size ?? 20,
           fontWeight: boldness ,
+          
           color: color ?? Colors.black),
     );
   }

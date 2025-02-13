@@ -9,7 +9,6 @@ class AppImage extends StatelessWidget {
   Widget build(BuildContext context) {
     // Use MediaQuery to determine the screen size dynamically
     final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
 
     // Calculate the size if not provided
     final double calculatedSize = size ?? screenWidth * 0.6;

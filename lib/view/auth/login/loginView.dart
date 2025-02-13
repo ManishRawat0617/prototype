@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:prototype/resources/assets/image.dart';
-import 'package:prototype/resources/constants/appString.dart';
 import 'package:prototype/resources/constants/app_Colors.dart';
-import 'package:prototype/view/auth/common/button.dart';
-import 'package:prototype/view/auth/common/inputBox.dart';
 import 'package:prototype/view/auth/common/input_field.dart';
 import 'package:prototype/view/auth/common/signinwith.dart';
 import 'package:prototype/view/auth/common/submit_button.dart';
 import 'package:prototype/view/auth/common/text_widget.dart';
 import 'package:prototype/view/auth/login/widget/app_image.dart';
-import 'package:prototype/view/auth/signup/signupView.dart';
-import 'package:prototype/view_model/auth/loginUser.dart';
+import 'package:prototype/view/auth/signup/userDetails.dart';
 import 'package:prototype/view_model/auth/loginController.dart';
 
 class LoginView extends StatefulWidget {
@@ -33,15 +29,15 @@ class _LoginViewState extends State<LoginView> {
           child: Column(
             children: [
               // Main logo
-              AppImage(),
+              const AppImage(),
 
               // container for login form
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Container(
                   width: size.width *
                       0.9, // width of the login form white container
-                 
+
                   decoration: BoxDecoration(
                     boxShadow: const [
                       BoxShadow(
@@ -57,8 +53,8 @@ class _LoginViewState extends State<LoginView> {
                     children: [
                       // login text
                       const Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 18),
-                        child: const TextWidget(
+                        padding: EdgeInsets.symmetric(vertical: 18),
+                        child: TextWidget(
                             title: "Solution Sphere",
                             boldness: FontWeight.bold,
                             size: 24,
@@ -89,14 +85,7 @@ class _LoginViewState extends State<LoginView> {
                       SubmitButton(
                         title: "Login",
                         ontap: () {
-                          print(
-                              loginController.emailController.text.toString());
-                          print(loginController.passwordController.text
-                              .toString());
-                          GetData().loginUser(
-                              loginController.emailController.text.toString(),
-                              loginController.passwordController.text
-                                  .toString());
+                          loginController.userLoginWithApi();
                         },
                       ),
                       SizedBox(
@@ -150,7 +139,8 @@ class _LoginViewState extends State<LoginView> {
                             ),
                             SizedBox(width: size.width * 0.01),
                             GestureDetector(
-                              onTap: () => Get.to(() => const SignupView()),
+                              onTap: () =>
+                                  Get.to(() => const UserDetailsView()),
                               child: Text(
                                 "Sign Up",
                                 style: TextStyle(

@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:prototype/resources/constants/endpoints.dart';
 import 'package:prototype/view/auth/login/loginView.dart';
+import 'package:prototype/view/auth/signup/experience_form.dart';
+import 'package:prototype/view/auth/signup/userDetails.dart';
 import 'package:prototype/view/callingScreen/signalingServer.dart';
+import 'package:prototype/view/testing/newSearch.dart';
+import 'package:prototype/view/testing/testing.dart';
 import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 
 Future<void> main() async {

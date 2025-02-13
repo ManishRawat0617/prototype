@@ -1,85 +1,110 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:prototype/Utilis/toastMessage.dart';
+import 'package:prototype/data/network/network_service_api.dart';
 import 'package:prototype/resources/constants/endpoints.dart';
 import 'package:prototype/resources/constants/userInfo.dart';
 import 'package:prototype/view/auth/login/loginView.dart';
-import 'package:prototype/view_model/auth/loginUser.dart';
-import 'package:http/http.dart' as http;
-import 'package:prototype/view_model/auth/post.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-class GooglesigninAPi {
-  static final _googleSignIn = GoogleSignIn();
-
-  static Future<GoogleSignInAccount?> login() => _googleSignIn.signIn();
-}
+import 'package:prototype/view/bottomNav/bottomNav.dart';
+import 'package:prototype/view_model/sharedPreference/sharedPreference.dart';
 
 class LoginController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final RxString sharedEmail = RxString("");
-  final RxString sharedPassword = RxString("");
+  static final _googleSignIn = GoogleSignIn();
 
-  Future signInWithGoogle() async {
-    final user = await GooglesigninAPi.login();
-    
-  
+  /// Handles user login via API
+  Future<void> userLoginWithApi() async {
+    var data = {
+      "email": emailController.text.trim(),
+      "password": passwordController.text.trim(),
+    };
+
     try {
-      http.Response response =
-          await http.post(Uri.parse(EndPoints.registerUser),
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: jsonEncode({
-                "email": user!.email.toString(),
-                "name": user.displayName.toString(),
-              }));
-      print("Response body: ${response.body}");
-      if (response.statusCode == 201) {
-        var data = jsonDecode(response.body.toString());
-        print("User created successfully");
-        print("User ID: ${data['id']}");
-      }
-      // Handling specific error codes
-      else if (response.statusCode == 409) {
-        print("User already exists");
-      } else if (response.statusCode == 422) {
-        print("Validation failed: Missing required fields");
+      final response =
+          await NetworkServiceApi().postData(EndPoints.userLogin, data);
+
+      if (response["status"] == 200) {
+        ToastMessage.show("User login successful");
+
+        // save data in the local cache
+        await AllLocalData().setUserId(response['data']["user"]["user_id"]);
+        await AllLocalData().setEmail(response['data']["user"]["email"]);
+        await AllLocalData().setUsername(
+            "${response['data']["user"]["first_name"]} ${response['data']["user"]["last_name"]}");
+        await AllLocalData().setIsLoggedIn(true);
+
+        // navigate to home screen
+        Get.to(() => BottomNB());
       } else {
-        print("Failed to create user: ${response.statusCode}");
-        var errorData = jsonDecode(response.body.toString());
-        print("Error message: ${errorData['message']}");
+        ToastMessage.show(
+            "Login Failed: ${response['message'] ?? 'Unknown error'}");
       }
-    } catch (err) {
-      print(err);
+    } catch (e) {
+      ToastMessage.show("An error occurred during login");
+      print("Login Error: $e");
     }
-    userDetails.userName = user!.displayName.toString();
-    print(user!.email.toString());
-    print(user.id.toString());
-    print(user.photoUrl.toString());
-    print(user.displayName.toString());
   }
 
-  Future signOutWithGoogle() async {
+  // Log out the user
+  Future<void> logoutUser() async {
     try {
-      // Sign out from Google account
-      await GooglesigninAPi._googleSignIn.signOut();
-      print("User signed out successfully");
-      Get.to(LoginView());
+      // Clear all shared preferences data
+      await AllLocalData().clearAll();
 
-      // Optionally clear any user data stored locally or in state management
+      // Provide feedback to the user (e.g., Snackbar message)
+      ToastMessage.show("You have successfully logged out.");
+
+      // Navigate to LoginView, clearing navigation history
+      Get.offAll(() => LoginView());
+    } catch (e) {
+      // Handle potential errors
+      ToastMessage.show("An error occurred while logging out.");
+    }
+  }
+
+  /// Handles Google sign-in
+  Future<void> signInWithGoogle() async {
+    final user = await _googleSignIn.signIn();
+    if (user == null) {
+      print("Google sign-in was cancelled");
+      return;
+    }
+
+    try {
+      var data = {
+        "first_name": user.displayName?.split(" ")[0] ?? "",
+        "last_name": user.displayName?.split(" ").sublist(1).join(" ") ?? "",
+        "email": user.email,
+        "phone_number": "",
+        "password": "AutoGeneratedPass#2025",
+        "date_of_birth": "",
+        "profile_picture_url": user.photoUrl ?? "",
+        "country": "",
+        "address": ""
+      };
+
+      final response = await NetworkServiceApi()
+          .postData(EndPoints.userDetailsRegister, data);
+      print("Google Sign-In Response: $response");
+
+      userDetails.userName = user.displayName ?? "Unknown";
+    } catch (err) {
+      print("Error during Google sign-in: $err");
+    }
+  }
+
+  /// Handles Google sign-out
+  Future<void> signOutWithGoogle() async {
+    try {
+      await _googleSignIn.signOut();
       emailController.clear();
       passwordController.clear();
-
-      // Notify the user about successful sign-out using GetX's snackbar
       Get.snackbar("Success", "Logged out successfully",
           snackPosition: SnackPosition.BOTTOM);
-
-      // Optionally navigate the user back to the login screen
-      Get.offAllNamed('/login'); // or replace '/login' with your login route
+      Get.offAll(() => LoginView());
     } catch (e) {
       print("Error signing out: $e");
       Get.snackbar("Error", "Failed to sign out",
